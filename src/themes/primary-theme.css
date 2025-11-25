@@ -1,0 +1,19 @@
+/* Light 模式：主色 #03C188 */
+:root,
+[data-theme='light'] {
+  --accent: oklch(68% 0.15 165); /* 你的亮青绿主色 */
+  --accent-foreground: oklch(100% 0 0); /* 白字，确保对比度高 */
+}
+
+/* Dark 模式：主色 #18D1A0 */
+.dark,
+[data-theme='dark'] {
+  --accent: oklch(80% 0.12 170); /* 你的暗青绿主色 */
+  --accent-foreground: oklch(0% 0 0); /* 黑字 */
+}
+
+/* 让 Tailwind 认得这些自定义颜色（文档关键步骤） */
+@theme inline {
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+}

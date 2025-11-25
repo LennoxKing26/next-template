@@ -1,0 +1,10 @@
+{
+  "Common": {
+    "lang_zh": "Chinese",
+    "lang_en": "English"
+  },
+  "Home": {
+    "title": "Welcome",
+    "desc": "This is the English version"
+  }
+}
