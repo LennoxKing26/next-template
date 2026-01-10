@@ -94,9 +94,8 @@ export default function Home() {
               <div className="flex items-center gap-2 sm:gap-3">
                 <Link
                   href="/history"
-                  className="hidden sm:flex items-center gap-1.5 px-3 py-2 md:px-4 md:py-2.5 text-sm md:text-base rounded-lg bg-surface dark:bg-surface-dark text-text-light-primary dark:text-text-dark-primary hover:bg-surface/80 dark:hover:bg-surface-dark/80 transition-all shadow-sm hover:shadow whitespace-nowrap"
+                  className="hidden sm:flex items-center gap-1.5 px-3 py-2 md:px-4 md:py-2.5 text-sm md:text-base rounded-lg  text-text-light-primary dark:text-text-dark-primary hover:bg-surface/80  transition-all shadow-sm hover:shadow whitespace-nowrap"
                 >
-                  <iconify-icon icon="mdi:history" width="18" height="18"></iconify-icon>
                   <span>{tc('history')}</span>
                 </Link>
                 <div className="relative group">

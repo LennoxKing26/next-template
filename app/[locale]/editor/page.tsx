@@ -169,12 +169,14 @@ export default function EditorPage() {
             ></iconify-icon>
             <h1 className="text-xl font-bold text-text-light-primary dark:text-text-dark-primary">AI Image Editor</h1>
           </Link>
-          <div className="flex items-center gap-4">
+          <div className="flex items-center gap-2">
             <Link
               href="/history"
-              className="text-text-light-primary dark:text-text-dark-primary hover:text-primary-light dark:hover:text-primary-dark"
+              className="text-text-light-secondary dark:text-text-dark-secondary hover:text-primary-light dark:hover:text-primary-dark"
             >
-              <iconify-icon icon="mdi:history" width="24" height="24"></iconify-icon>
+              <div className="w-6 h-6  md:w-5 md:h-5 shrink-0 flex items-center justify-center group-hover:scale-110 transition-transform">
+                <iconify-icon icon="mdi:history" width="100%" height="100%" style={{ display: 'flex' }}></iconify-icon>
+              </div>
             </Link>
             <span className="text-text-light-secondary dark:text-text-dark-secondary">{session?.user?.email}</span>
           </div>
