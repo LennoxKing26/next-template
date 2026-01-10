@@ -1,7 +1,9 @@
 {
   "Common": {
-    "lang_zh": "中文",
-    "lang_en": "英文"
+    "switch_zh": "中文",
+    "switch_en": "英文",
+    "home": "首页",
+    "about": "关于"
   },
   "Home": {
     "title": "欢迎",

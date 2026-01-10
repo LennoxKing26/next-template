@@ -1,7 +1,9 @@
 {
   "Common": {
-    "lang_zh": "Chinese",
-    "lang_en": "English"
+    "switch_zh": "Chinese",
+    "switch_en": "English",
+    "home": "Home",
+    "about": "About"
   },
   "Home": {
     "title": "Welcome",

@@ -10,7 +10,7 @@ export function LocaleSwitcher() {
   const isEn = currentLocale === 'en';
 
   return (
-    <div className="inline-flex items-center rounded-full border px-1 py-0.5 gap-1 text-sm">
+    <div className="inline-flex items-center gap-1 rounded-full border px-1 py-0.5 text-sm">
       <button
         type="button"
         onClick={() => switchLocale('zh-CN')}

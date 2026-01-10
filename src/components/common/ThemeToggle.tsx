@@ -1,21 +1,28 @@
-// app/components/ThemeToggle.tsx
+// src/components/common/ThemeToggle.tsx
 'use client';
+
 import { Button } from '@heroui/react';
+import { useTheme } from '@/hooks/useTheme';
 
 export function ThemeToggle() {
-  const toggleTheme = async () => {
-    // 调用服务端 API 切换主题
-    const res = await fetch('/api/theme');
-    const data = await res.json();
-    const newTheme = data.theme;
+  const { themeMode, resolvedTheme, cycleTheme } = useTheme();
 
-    // 修改 data-theme
-    document.documentElement.setAttribute('data-theme', newTheme);
+  const getThemeLabel = () => {
+    if (themeMode === 'system') {
+      return `跟随系统 (${resolvedTheme === 'dark' ? '暗色' : '亮色'})`;
+    }
+    return themeMode === 'dark' ? '暗色' : '亮色';
+  };
+
+  const getThemeIcon = () => {
+    if (themeMode === 'system') return '🖥️';
+    if (themeMode === 'dark') return '🌙';
+    return '☀️';
   };
 
   return (
-    <Button variant="primary" onClick={toggleTheme}>
-      切换主题
+    <Button variant="primary" onClick={cycleTheme}>
+      {getThemeIcon()} {getThemeLabel()}
     </Button>
   );
 }

@@ -12,10 +12,13 @@
   "dependencies": {
     "@heroui/react": "3.0.0-beta.2",
     "@heroui/styles": "3.0.0-beta.2",
+    "ahooks": "^3.9.6",
+    "iconify-icon": "^3.0.2",
     "next": "16.0.3",
     "next-intl": "^4.5.5",
     "react": "19.2.0",
-    "react-dom": "19.2.0"
+    "react-dom": "19.2.0",
+    "zustand": "^5.0.9"
   },
   "devDependencies": {
     "@tailwindcss/postcss": "^4",

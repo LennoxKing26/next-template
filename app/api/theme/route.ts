@@ -3,13 +3,15 @@ import { NextResponse } from 'next/server';
 import { cookies } from 'next/headers';
 
 export async function GET() {
-  const cookieStore = await cookies();
-  const currentTheme = cookieStore.get('theme')?.value || 'light'; // 默认主题 'light'
-  const newTheme = currentTheme === 'light' ? 'dark' : 'light'; // 切换主题
+  const cookieStore = await cookies(); // 不用 await
+  const currentTheme = cookieStore.get('theme')?.value || 'light';
+  const newTheme = currentTheme === 'light' ? 'dark' : 'light';
 
-  // 设置新的主题
-  cookieStore.set('theme', newTheme, { maxAge: 60 * 60 * 24 * 365 }); // 设置有效期1年
+  cookieStore.set('theme', newTheme, {
+    maxAge: 60 * 60 * 24 * 365,
+    path: '/', // 建议带上
+    httpOnly: false, // 你要在浏览器读，就别设 httpOnly: true
+  });
 
-  // 返回切换后的主题
   return NextResponse.json({ theme: newTheme });
 }

@@ -1,6 +1,10 @@
 'use client';
 import { AlertDialog, Button } from '@heroui/react';
-import { ThemeToggle } from '@/src/components/common/ThemeToggle';
+import { ThemeToggle } from '@/components/common/ThemeToggle';
+import { useTranslations } from 'next-intl';
+import { LocaleSwitcher } from '@/components/common/LocaleSwitcher';
+import { useRouter, Link } from '@/i18n/navigation'; // ✅ 从这里引
+import { useTheme } from '@/hooks/useTheme';
 
 export default function Home() {
   const examples = [
@@ -49,11 +53,39 @@ export default function Home() {
       trigger: 'Delete Account',
     },
   ] as const;
+  // const theme = useTheme();
 
+  const t = useTranslations('Home');
+  // const router = useRouter();
+  // const goToAbout = () => {
+  //   // ✅ 这里写的是“逻辑路径”，不需要自己加 /en /zh-CN
+  //   router.push('/test');
+  //   // 当前是 /zh-CN，就跳 /zh-CN/about
+  //   // 当前是 /en，就跳 /en/about
+  // };
   return (
     <div className="flex flex-wrap gap-4">
+      <LocaleSwitcher />
+      <h1 className="text-2xl font-bold mb-2">{t('title')}</h1>
+      <p>{t('desc')}</p>
       <h1 className="text-2xl text-primary-light dark:text-primary-dark">Alert Dialog(ಡωಡ)hiahiahia</h1>
       <ThemeToggle />
+      {/* {theme} */}
+      {/* 使用 Link 的跳转方式（推荐用于导航） */}
+      <div className="flex items-center gap-2 flex-wrap">
+        <Link href="/test" className="underline text-blue-500">
+          去 Test 页面（Link）
+        </Link>
+        <Link href="/examples" className="underline text-blue-500">
+          去示例页面（Zustand & ahooks）
+        </Link>
+
+        {/* 使用 useRouter 的编程式跳转 */}
+        {/* <Button onPress={goToAbout} variant="primary"> */}
+        {/* 去 Test 页面（router.push） */}
+        {/* </Button> */}
+      </div>
+
       {examples.map(({ actions, body, classNames, header, status, trigger }) => (
         <AlertDialog key={status}>
           <Button className={classNames}>{trigger}</Button>
