@@ -8,7 +8,7 @@ export default {
     // Or if using `src` directory:
     './src/**/*.{js,ts,jsx,tsx,mdx}',
   ],
-  darkMode: ['class', '[data-theme="dark"]'], // 添加这一行！
+  darkMode: '[data-theme="dark"]',
   theme: {
     extend: {
       screens: {

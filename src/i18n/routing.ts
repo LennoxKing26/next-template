@@ -3,13 +3,13 @@ import { defineRouting } from 'next-intl/routing';
 
 export const routing = defineRouting({
   // 支持的语言
-  locales: ['en', 'zh-CN'],
+  locales: ['en', 'zh-CN', 'ko'],
 
   // 默认语言
   defaultLocale: 'zh-CN',
 
   // URL 前缀策略：
-  // 'always' => 所有语言都带前缀：/en /zh-CN
+  // 'always' => 所有语言都带前缀：/en /zh-CN /ko
   // 想默认语言不带前缀可以改成 'as-needed'
   localePrefix: 'always',
 });

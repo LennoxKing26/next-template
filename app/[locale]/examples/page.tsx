@@ -65,14 +65,20 @@ export default function ExamplesPage() {
         <Link href="/" className="text-primary-light dark:text-primary-dark underline">
           ← 返回首页<iconify-icon icon="mdi:home"></iconify-icon>
         </Link>
-        <h1 className="text-3xl font-bold">Zustand & ahooks 示例</h1>
+        <h1 className="text-3xl font-bold text-text-light-primary dark:text-text-dark-primary">
+          Zustand & ahooks 示例
+        </h1>
       </div>
 
       {/* Zustand Counter Store 示例 */}
       <section className="p-6 rounded-lg bg-surface dark:bg-surface-dark border border-border-light dark:border-border-dark">
-        <h2 className="text-2xl font-semibold mb-4">📦 Zustand Counter Store</h2>
+        <h2 className="text-2xl font-semibold mb-4 text-text-light-primary dark:text-text-dark-primary">
+          📦 Zustand Counter Store
+        </h2>
         <div className="space-y-4">
-          <div className="text-4xl font-bold text-center py-4">{count}</div>
+          <div className="text-4xl font-bold text-center py-4 text-text-light-primary dark:text-text-dark-primary">
+            {count}
+          </div>
           <div className="flex gap-2 flex-wrap">
             <Button variant="primary" onClick={increment}>
               +1
@@ -92,22 +98,24 @@ export default function ExamplesPage() {
 
       {/* Zustand User Store 示例 */}
       <section className="p-6 rounded-lg bg-surface dark:bg-surface-dark border border-border-light dark:border-border-dark">
-        <h2 className="text-2xl font-semibold mb-4">👤 Zustand User Store + ahooks useRequest</h2>
+        <h2 className="text-2xl font-semibold mb-4 text-text-light-primary dark:text-text-dark-primary">
+          👤 Zustand User Store + ahooks useRequest
+        </h2>
         <div className="space-y-4">
           {user ? (
             <div className="p-4 bg-success-50 dark:bg-success-900/20 rounded">
-              <p>
+              <p className="text-text-light-primary dark:text-text-dark-primary">
                 <strong>ID:</strong> {user.id}
               </p>
-              <p>
+              <p className="text-text-light-primary dark:text-text-dark-primary">
                 <strong>Name:</strong> {user.name}
               </p>
-              <p>
+              <p className="text-text-light-primary dark:text-text-dark-primary">
                 <strong>Email:</strong> {user.email}
               </p>
             </div>
           ) : (
-            <p className="text-gray-500">暂无用户数据</p>
+            <p className="text-text-light-secondary dark:text-text-dark-secondary">暂无用户数据</p>
           )}
           {error && <p className="text-error-light dark:text-error-dark">{error}</p>}
           <div className="flex gap-2">
@@ -123,10 +131,14 @@ export default function ExamplesPage() {
 
       {/* ahooks useToggle 示例 */}
       <section className="p-6 rounded-lg bg-surface dark:bg-surface-dark border border-border-light dark:border-border-dark">
-        <h2 className="text-2xl font-semibold mb-4">🔄 ahooks useToggle</h2>
+        <h2 className="text-2xl font-semibold mb-4 text-text-light-primary dark:text-text-dark-primary">
+          🔄 ahooks useToggle
+        </h2>
         <div className="space-y-4">
           <div className="p-4 bg-gray-100 dark:bg-gray-800 rounded">
-            <p>当前状态: {isVisible ? '✅ 显示' : '❌ 隐藏'}</p>
+            <p className="text-text-light-primary dark:text-text-dark-primary">
+              当前状态: {isVisible ? '✅ 显示' : '❌ 隐藏'}
+            </p>
           </div>
           <div className="flex gap-2">
             <Button variant="primary" onClick={toggle}>
@@ -144,20 +156,22 @@ export default function ExamplesPage() {
 
       {/* ahooks useDebounce 示例 */}
       <section className="p-6 rounded-lg bg-surface dark:bg-surface-dark border border-border-light dark:border-border-dark">
-        <h2 className="text-2xl font-semibold mb-4">⏱️ ahooks useDebounce</h2>
+        <h2 className="text-2xl font-semibold mb-4 text-text-light-primary dark:text-text-dark-primary">
+          ⏱️ ahooks useDebounce
+        </h2>
         <div className="space-y-4">
           <input
             type="text"
             value={searchText}
             onChange={(e) => setSearchText(e.target.value)}
             placeholder="输入搜索文本（500ms 防抖）"
-            className="w-full px-4 py-2 rounded border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800"
+            className="w-full px-4 py-2 rounded border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-text-light-primary dark:text-text-dark-primary"
           />
           <div className="p-4 bg-gray-100 dark:bg-gray-800 rounded">
-            <p>
+            <p className="text-text-light-primary dark:text-text-dark-primary">
               <strong>实时输入:</strong> {searchText}
             </p>
-            <p>
+            <p className="text-text-light-primary dark:text-text-dark-primary">
               <strong>防抖后:</strong> {debouncedSearchText}
             </p>
           </div>
@@ -166,16 +180,18 @@ export default function ExamplesPage() {
 
       {/* ahooks useThrottle 示例 */}
       <section className="p-6 rounded-lg bg-surface dark:bg-surface-dark border border-border-light dark:border-border-dark">
-        <h2 className="text-2xl font-semibold mb-4">🚦 ahooks useThrottle</h2>
+        <h2 className="text-2xl font-semibold mb-4 text-text-light-primary dark:text-text-dark-primary">
+          🚦 ahooks useThrottle
+        </h2>
         <div className="space-y-4">
           <Button variant="primary" onClick={() => setClickCount((c) => c + 1)}>
             点击我（节流 1000ms）
           </Button>
           <div className="p-4 bg-gray-100 dark:bg-gray-800 rounded">
-            <p>
+            <p className="text-text-light-primary dark:text-text-dark-primary">
               <strong>实际点击次数:</strong> {clickCount}
             </p>
-            <p>
+            <p className="text-text-light-primary dark:text-text-dark-primary">
               <strong>节流后计数:</strong> {throttledClickCount}
             </p>
           </div>
@@ -184,9 +200,13 @@ export default function ExamplesPage() {
 
       {/* ahooks useInterval 示例 */}
       <section className="p-6 rounded-lg bg-surface dark:bg-surface-dark border border-border-light dark:border-border-dark">
-        <h2 className="text-2xl font-semibold mb-4">⏰ ahooks useInterval</h2>
+        <h2 className="text-2xl font-semibold mb-4 text-text-light-primary dark:text-text-dark-primary">
+          ⏰ ahooks useInterval
+        </h2>
         <div className="space-y-4">
-          <div className="text-4xl font-bold text-center py-4">{intervalCount}</div>
+          <div className="text-4xl font-bold text-center py-4 text-text-light-primary dark:text-text-dark-primary">
+            {intervalCount}
+          </div>
           <div className="flex gap-2">
             <Button variant="primary" onClick={() => setIntervalRunning(!intervalRunning)}>
               {intervalRunning ? '暂停' : '开始'}
