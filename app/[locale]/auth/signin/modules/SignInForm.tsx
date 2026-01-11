@@ -1,19 +1,19 @@
-// src/components/auth/SignInForm.tsx
 'use client';
 
 import { useState } from 'react';
 import { signIn } from 'next-auth/react';
 import { useRouter, Link } from '@/i18n/navigation';
 import { Button, Input, Card, CardBody, CardHeader, Link as HeroLink } from '@heroui/react';
+import { useTranslations } from 'next-intl';
 
 export default function SignInForm() {
   const router = useRouter();
+  const t = useTranslations('Auth');
+  const tCommon = useTranslations('Common');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
-
-  // 控制密码可见性
   const [isVisible, setIsVisible] = useState(false);
   const toggleVisibility = () => setIsVisible(!isVisible);
 
@@ -30,20 +30,18 @@ export default function SignInForm() {
       });
 
       if (result?.error) {
-        setError('邮箱或密码错误');
+        setError(t('errorCredentials'));
       } else {
         router.push('/editor');
       }
     } catch (err) {
-      setError('登录失败，请重试');
+      setError(t('errorLoginFailed'));
     } finally {
       setLoading(false);
     }
   };
 
   return (
-    // 卡片本身：保持 max-w-md 以与注册页的视觉体量保持一致（如果注册页也是 max-w-md）
-    // 如果想要完全一致，这里也可以改成 max-w-[380px]
     <Card className="w-full max-w-md backdrop-blur-md bg-background/60 dark:bg-content1/50 shadow-large">
       <CardHeader className="flex flex-col gap-3 items-center pt-8 pb-4">
         <Link href="/" className="group flex flex-col items-center gap-2">
@@ -53,8 +51,8 @@ export default function SignInForm() {
           <h1 className="text-2xl font-bold">AI Image Editor</h1>
         </Link>
         <div className="text-center space-y-1">
-          <h2 className="text-xl font-semibold">欢迎回来</h2>
-          <p className="text-sm text-default-500">输入您的账号密码以继续</p>
+          <h2 className="text-xl font-semibold">{t('welcomeBack')}</h2>
+          <p className="text-sm text-default-500">{t('enterCredentials')}</p>
         </div>
       </CardHeader>
 
@@ -67,11 +65,10 @@ export default function SignInForm() {
             </div>
           )}
 
-          {/* 这里的 space-y 我调整为 4，让原本的 11 看起来更紧凑一些，符合 HeroUI 风格 */}
           <div className="flex flex-col gap-4">
             <Input
               type="email"
-              label="邮箱"
+              label={t('email')}
               placeholder="your@email.com"
               variant="bordered"
               labelPlacement="outside"
@@ -85,7 +82,7 @@ export default function SignInForm() {
             />
 
             <Input
-              label="密码"
+              label={t('password')}
               placeholder="••••••••"
               variant="bordered"
               labelPlacement="outside"
@@ -115,7 +112,7 @@ export default function SignInForm() {
 
             <div className="flex justify-end">
               <HeroLink href="#" size="sm" color="primary" className="text-xs">
-                忘记密码?
+                {t('forgotPassword')}
               </HeroLink>
             </div>
           </div>
@@ -128,13 +125,13 @@ export default function SignInForm() {
             isLoading={loading}
             startContent={!loading && <iconify-icon icon="mdi:login" width="20" />}
           >
-            {loading ? '登录中...' : '登录'}
+            {loading ? t('loggingIn') : tCommon('login')}
           </Button>
 
           <div className="flex items-center gap-2 text-sm text-default-500 justify-center mt-2">
-            <span>还没有账户？</span>
+            <span>{t('noAccount')}</span>
             <HeroLink as={Link} href="/auth/signup" size="sm" color="primary" className="font-semibold cursor-pointer">
-              立即注册
+              {t('registerNow')}
             </HeroLink>
           </div>
         </form>

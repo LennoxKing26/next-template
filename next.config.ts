@@ -7,6 +7,7 @@ const config: NextConfig = {
   // 比如：
   // reactStrictMode: true,
   // experimental: { serverActions: true },
+  output: 'standalone', // 👈 加上这一行
 };
 
 // 用 next-intl 包一层

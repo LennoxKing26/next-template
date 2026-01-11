@@ -70,7 +70,7 @@ export function Header() {
                 </DropdownTrigger>
                 <DropdownMenu aria-label="Profile Actions" variant="flat">
                   <DropdownItem key="profile" className="h-14 gap-2">
-                    <p className="font-semibold">{t('signed_in_as')}</p>
+                    <p className="font-semibold">{t('email')}</p>
                     <p className="font-semibold">{session.user?.email}</p>
                   </DropdownItem>
                   <DropdownItem key="history" href="/history" className="sm:hidden">

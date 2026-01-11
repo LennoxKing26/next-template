@@ -1,160 +1,146 @@
-# AI Image Editor
+# AI Image Editor - Next.js Template
 
-一个基于 Next.js 16 的 AI 驱动图片编辑应用。
+一个基于 Next.js 的 AI 图片编辑应用模板。
 
-## 当前状态
+## 技术栈分析
 
-✅ **前端完全正常**
+### 核心框架
 
-- 首页展示完美
-- 主题切换正常（亮色/暗色/跟随系统）
-- 国际化支持（中英文）
-- 响应式设计
-- 所有页面布局完成
+| 技术       | 版本   | 说明                            |
+| ---------- | ------ | ------------------------------- |
+| Next.js    | 16.0.3 | React 全栈框架，使用 App Router |
+| React      | 19.2.0 | UI 库                           |
+| TypeScript | ^5     | 类型安全                        |
 
-⚠️ **后端需要配置**
+### UI 组件库
 
-- NextAuth 需要 MongoDB 连接才能工作
-- 文件上传需要阿里云 OSS 配置
-- AI 编辑需要 WaveSpeed API Key
+| 技术          | 版本    | 说明                         |
+| ------------- | ------- | ---------------------------- |
+| HeroUI        | 2.8.7   | 主要 UI 组件库（原 NextUI）  |
+| Framer Motion | 12.25.0 | 动画库                       |
+| iconify-icon  | 3.0.2   | 图标库（Web Component 方式） |
 
-## 快速开始
+### 样式方案
 
-### 1. 安装依赖
+| 技术          | 版本          | 说明                         |
+| ------------- | ------------- | ---------------------------- |
+| Tailwind CSS  | ^4            | 原子化 CSS 框架              |
+| @heroui/theme | 2.4.18-beta.7 | HeroUI 主题插件              |
+| 自定义主题    | -             | 基于绿色主色调的完整色彩系统 |
 
-```bash
-pnpm install
-```
+### 主题系统
 
-### 2. 配置环境变量
+- **next-themes** (0.4.6): 支持亮色/暗色/跟随系统三种模式
+- **darkMode: 'class'**: 通过 CSS class 切换主题
+- **自定义色彩变量**: 包含 primary、secondary、success、warning、error 等完整色阶
 
-复制 `.env.local` 文件并填入真实配置：
+### 国际化 (i18n)
 
-**必需配置（用于用户认证）：**
+| 技术      | 版本  | 说明                   |
+| --------- | ----- | ---------------------- |
+| next-intl | 4.5.5 | Next.js 国际化解决方案 |
 
-```env
-# MongoDB - 必须配置才能使用登录功能
-MONGODB_URI=mongodb://localhost:27017/ai-image-editor
-# 或使用 MongoDB Atlas（推荐）
-# MONGODB_URI=mongodb+srv://username:password@cluster.mongodb.net/ai-image-editor
+**支持语言**:
 
-# NextAuth Secret - 生成方法：openssl rand -base64 32
-NEXTAUTH_SECRET=your-generated-secret-here
-```
+- 🇨🇳 简体中文 (zh-CN) - 默认语言
+- 🇺🇸 English (en)
+- 🇰🇷 한국어 (ko)
 
-**可选配置（用于完整功能）：**
+**路由策略**: `localePrefix: 'always'` - 所有语言都带前缀
 
-```env
-# 阿里云 OSS（文件上传）
-FILE_ACCESS_KEY_ID=your-key
-FILE_ACCESS_KEY_SECRET=your-secret
-FILE_ENDPOINT=oss-cn-hangzhou.aliyuncs.com
-FILE_BUCKET_NAME=your-bucket
-FILE_OSS_URL=https://your-bucket.oss-cn-hangzhou.aliyuncs.com/
+### 状态管理
 
-# WaveSpeed AI（图片编辑）
-WAVESPEED_KEY=your-api-key
-WAVESPEED_URL=https://api.wavespeed.ai/api/v3
-```
+| 技术    | 版本  | 说明           |
+| ------- | ----- | -------------- |
+| Zustand | 5.0.9 | 轻量级状态管理 |
 
-### 3. 启动开发服务器
+### 工具库
 
-```bash
-pnpm dev
-```
+| 技术   | 版本  | 说明                                             |
+| ------ | ----- | ------------------------------------------------ |
+| ahooks | 3.9.6 | React Hooks 工具库（useRequest、useInterval 等） |
 
-访问 http://localhost:8888
+### 认证系统
 
-## 功能说明
+| 技术        | 版本          | 说明                   |
+| ----------- | ------------- | ---------------------- |
+| NextAuth.js | 5.0.0-beta.30 | 身份认证（Auth.js v5） |
+| bcryptjs    | 3.0.3         | 密码加密               |
 
-### 无需配置即可使用
+### 数据库
 
-- ✅ 浏览首页
-- ✅ 查看功能介绍
-- ✅ 切换主题（亮色/暗色/跟随系统）
-- ✅ 切换语言（中文/英文）
-- ✅ 查看示例页面
+| 技术     | 版本  | 说明         |
+| -------- | ----- | ------------ |
+| MongoDB  | -     | NoSQL 数据库 |
+| Mongoose | 9.1.2 | MongoDB ODM  |
 
-### 需要 MongoDB 配置
+### 文件存储
 
-- ⏳ 用户注册
-- ⏳ 用户登录
-- ⏳ 查看编辑历史
-
-### 需要完整配置
-
-- ⏳ 上传图片
-- ⏳ AI 图片编辑
-- ⏳ 保存编辑结果
-
-## MongoDB 配置指南
-
-### 方案 1：本地 MongoDB
-
-1. 安装 MongoDB：https://www.mongodb.com/try/download/community
-2. 启动 MongoDB 服务
-3. 使用连接字符串：`mongodb://localhost:27017/ai-image-editor`
-
-### 方案 2：MongoDB Atlas（推荐，免费）
-
-1. 访问 https://www.mongodb.com/cloud/atlas
-2. 注册并创建免费集群
-3. 创建数据库用户
-4. 获取连接字符串
-5. 添加 IP 白名单（0.0.0.0/0 允许所有）
-
-## 常见问题
-
-### Q: 为什么登录页面报错？
-
-A: NextAuth 需要 MongoDB 连接才能工作。请配置 `MONGODB_URI` 环境变量。
-
-### Q: 如何生成 NEXTAUTH_SECRET？
-
-A: 运行命令：`openssl rand -base64 32`
-
-### Q: 可以不配置数据库吗？
-
-A: 可以浏览前端页面，但无法使用登录、注册和历史记录功能。
-
-### Q: 主题切换不生效？
-
-A: 清除浏览器 Cookie 和 localStorage，然后刷新页面。
-
-## 技术栈
-
-- Next.js 16 + React 19
-- NextAuth.js（认证）
-- MongoDB + Mongoose（数据库）
-- Aliyun OSS（文件存储）
-- WaveSpeed AI（图片编辑）
-- Tailwind CSS 4（样式）
-- Zustand（状态管理）
-- ahooks（工具库）
+| 技术    | 版本   | 说明                |
+| ------- | ------ | ------------------- |
+| ali-oss | 6.23.0 | 阿里云 OSS 文件存储 |
 
 ## 项目结构
 
 ```
-├── app/                    # Next.js App Router
-│   ├── [locale]/          # 国际化路由
-│   │   ├── page.tsx       # 首页
-│   │   ├── editor/        # 编辑器
-│   │   ├── history/       # 历史记录
-│   │   └── auth/          # 认证页面
-│   └── api/               # API 路由
+├── app/
+│   ├── [locale]/              # 国际化路由
+│   │   ├── page.tsx           # 首页
+│   │   ├── layout.tsx         # 布局
+│   │   ├── auth/              # 认证页面
+│   │   │   ├── signin/        # 登录
+│   │   │   └── signup/        # 注册
+│   │   ├── editor/            # 编辑器页面
+│   │   ├── history/           # 历史记录页面
+│   │   └── examples/          # 示例页面
+│   ├── api/                   # API 路由
+│   └── globals.css            # 全局样式
+├── messages/                  # 国际化翻译文件
+│   ├── en.json
+│   ├── zh-CN.json
+│   └── ko.json
 ├── src/
-│   ├── components/        # React 组件
-│   ├── hooks/             # 自定义 Hooks
-│   ├── lib/               # 工具库
-│   ├── models/            # 数据库模型
-│   └── stores/            # 状态管理
-└── messages/              # 国际化消息
+│   ├── components/            # 公共组件
+│   ├── hooks/                 # 自定义 Hooks
+│   ├── i18n/                  # 国际化配置
+│   ├── lib/                   # 工具库
+│   ├── models/                # 数据模型
+│   ├── stores/                # Zustand 状态
+│   ├── themes/                # 主题文件
+│   ├── types/                 # TypeScript 类型
+│   └── utils/                 # 工具函数
+└── public/                    # 静态资源
 ```
 
-## 详细文档
+## 开发命令
 
-查看 `SETUP.md` 获取完整的配置和部署指南。
+```bash
+# 安装依赖
+pnpm install
 
-## 许可证
+# 开发模式（自动打开浏览器 http://localhost:8888）
+pnpm dev
 
-MIT
+# 构建
+pnpm build
+
+# 生产模式
+pnpm start
+
+# 代码检查
+pnpm lint
+```
+
+## 特性
+
+- ✅ Next.js 16 App Router
+- ✅ TypeScript 支持
+- ✅ HeroUI 组件库
+- ✅ Tailwind CSS 4
+- ✅ 暗色/亮色主题切换
+- ✅ 多语言支持 (中/英/韩)
+- ✅ NextAuth 身份认证
+- ✅ MongoDB 数据存储
+- ✅ 阿里云 OSS 文件上传
+- ✅ AI 图片编辑功能
+- ✅ 响应式设计

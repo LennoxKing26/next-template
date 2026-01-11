@@ -1,6 +1,8 @@
 'use client';
 
 import { Card, CardFooter, Image, Button, Chip } from '@heroui/react';
+import { useTranslations } from 'next-intl';
+import { useLocale } from 'next-intl';
 
 interface HistoryCardProps {
   record: {
@@ -13,18 +15,20 @@ interface HistoryCardProps {
   };
 }
 
-const statusMap: Record<string, { color: 'success' | 'warning' | 'danger' | 'default'; label: string }> = {
-  completed: { color: 'success', label: '已完成' },
-  processing: { color: 'warning', label: '处理中' },
-  failed: { color: 'danger', label: '失败' },
-  pending: { color: 'default', label: '排队中' },
-};
-
 export function HistoryCard({ record }: HistoryCardProps) {
+  const t = useTranslations('History');
+  const locale = useLocale();
+
+  const statusMap: Record<string, { color: 'success' | 'warning' | 'danger' | 'default'; labelKey: string }> = {
+    completed: { color: 'success', labelKey: 'statusCompleted' },
+    processing: { color: 'warning', labelKey: 'statusProcessing' },
+    failed: { color: 'danger', labelKey: 'statusFailed' },
+    pending: { color: 'default', labelKey: 'statusPending' },
+  };
+
   const statusConfig = statusMap[record.status] || statusMap.pending;
 
-  // 使用原生 Intl 格式化时间，不需要 date-fns
-  const dateStr = new Date(record.createdAt).toLocaleString('zh-CN', {
+  const dateStr = new Date(record.createdAt).toLocaleString(locale, {
     month: '2-digit',
     day: '2-digit',
     hour: '2-digit',
@@ -33,7 +37,6 @@ export function HistoryCard({ record }: HistoryCardProps) {
 
   return (
     <Card isFooterBlurred className="w-full h-[300px]  border-none" shadow="sm">
-      {/* 图片区域 - 带有缩放动画 */}
       <div className="relative w-full h-full overflow-hidden group">
         {record.resultUrl ? (
           <Image
@@ -49,19 +52,17 @@ export function HistoryCard({ record }: HistoryCardProps) {
               width="48"
               class={record.status === 'processing' ? 'animate-pulse' : ''}
             />
-            <span className="text-xs">{statusConfig.label}</span>
+            <span className="text-xs">{t(statusConfig.labelKey)}</span>
           </div>
         )}
 
-        {/* 状态标签 - 悬浮在右上角 */}
         <div className="absolute top-2 right-2 z-20">
           <Chip color={statusConfig.color} size="sm" variant="flat" className="backdrop-blur-md bg-background/60">
-            {statusConfig.label}
+            {t(statusConfig.labelKey)}
           </Chip>
         </div>
       </div>
 
-      {/* 底部信息栏 - 玻璃拟态 */}
       <CardFooter className="absolute bg-black/40 bottom-0 z-10 border-t-1 border-default-600 dark:border-default-100 flex-col items-start gap-2 h-[100px] backdrop-blur-md">
         <div className="flex justify-between items-start w-full">
           <div className="flex flex-col gap-1 w-[70%]">

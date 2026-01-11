@@ -1,0 +1,33 @@
+version: '3.8'
+
+services:
+  app:
+    container_name: ai-editor
+    # 记得改成你的 DockerHub 用户名
+    image: 你的DockerHub用户名/ai-image-editor:latest
+    restart: always
+    # 🔥 核心修改：左边是服务器端口，右边是容器端口
+    ports:
+      - '3008:3008'
+    env_file:
+      - .env
+    depends_on:
+      - mongo
+    networks:
+      - app-network
+
+  mongo:
+    image: mongo:latest
+    container_name: ai-mongo
+    restart: always
+    volumes:
+      - ./mongo-data:/data/db
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: admin
+      MONGO_INITDB_ROOT_PASSWORD: password
+    networks:
+      - app-network
+
+networks:
+  app-network:
+    driver: bridge

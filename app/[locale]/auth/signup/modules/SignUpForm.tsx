@@ -4,9 +4,11 @@ import { useState } from 'react';
 import { signIn } from 'next-auth/react';
 import { useRouter, Link } from '@/i18n/navigation';
 import { Button, Input, Card, CardBody, CardHeader, Link as HeroLink } from '@heroui/react';
+import { useTranslations } from 'next-intl';
 
 export default function SignUpPage() {
   const router = useRouter();
+  const t = useTranslations('Auth');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [name, setName] = useState('');
@@ -31,7 +33,7 @@ export default function SignUpPage() {
       const data = await response.json();
 
       if (!response.ok) {
-        setError(data.error || '注册失败');
+        setError(data.error || t('errorRegisterFailed'));
         setLoading(false);
         return;
       }
@@ -43,25 +45,20 @@ export default function SignUpPage() {
       });
 
       if (result?.error) {
-        setError('注册成功，但自动登录失败');
+        setError(t('errorAutoLoginFailed'));
         setTimeout(() => router.push('/auth/signin'), 2000);
       } else {
         router.push('/editor');
       }
     } catch (err) {
-      setError('网络请求失败');
+      setError(t('errorNetwork'));
     } finally {
       setLoading(false);
     }
   };
 
   return (
-    // 🔥 1. h-screen + overflow-hidden: 确保满屏且无滚动条
     <div className="h-screen w-full flex items-center justify-center bg-background relative overflow-hidden">
-      {/* 2. 卡片样式统一：
-          - max-w-md: 与登录页完全一致的宽度
-          - backdrop-blur-md 等: 与登录页一致的质感
-      */}
       <Card className="w-full max-w-md backdrop-blur-md bg-background/60 dark:bg-content1/50 shadow-large">
         <CardHeader className="flex flex-col gap-3 items-center pt-8 pb-4">
           <Link href="/" className="group flex flex-col items-center gap-2">
@@ -71,8 +68,8 @@ export default function SignUpPage() {
             <h1 className="text-2xl font-bold">AI Image Editor</h1>
           </Link>
           <div className="text-center space-y-1">
-            <h2 className="text-xl font-semibold">创建新账户</h2>
-            <p className="text-sm text-default-500">加入我们开始创作</p>
+            <h2 className="text-xl font-semibold">{t('createAccount')}</h2>
+            <p className="text-sm text-default-500">{t('joinUs')}</p>
           </div>
         </CardHeader>
 
@@ -85,12 +82,11 @@ export default function SignUpPage() {
               </div>
             )}
 
-            {/* 统一间距，保持呼吸感 */}
             <div className="flex flex-col gap-4">
               <Input
                 type="text"
-                label="昵称"
-                placeholder="如何称呼您?"
+                label={t('nickname')}
+                placeholder={t('nicknamePlaceholder')}
                 variant="bordered"
                 labelPlacement="outside"
                 value={name}
@@ -105,7 +101,7 @@ export default function SignUpPage() {
 
               <Input
                 type="email"
-                label="邮箱"
+                label={t('email')}
                 placeholder="name@example.com"
                 variant="bordered"
                 labelPlacement="outside"
@@ -121,8 +117,8 @@ export default function SignUpPage() {
               />
 
               <Input
-                label="密码"
-                placeholder="至少 6 位字符"
+                label={t('password')}
+                placeholder={t('passwordPlaceholder')}
                 variant="bordered"
                 labelPlacement="outside"
                 value={password}
@@ -161,11 +157,11 @@ export default function SignUpPage() {
               isLoading={loading}
               startContent={!loading && <iconify-icon icon="mdi:account-plus" width="20" />}
             >
-              {loading ? '注册中...' : '注册'}
+              {loading ? t('registering') : t('register')}
             </Button>
 
             <div className="flex items-center gap-2 text-sm text-default-500 justify-center mt-2">
-              <span>已有账户？</span>
+              <span>{t('hasAccount')}</span>
               <HeroLink
                 as={Link}
                 href="/auth/signin"
@@ -173,7 +169,7 @@ export default function SignUpPage() {
                 color="primary"
                 className="font-semibold cursor-pointer"
               >
-                直接登录
+                {t('loginNow')}
               </HeroLink>
             </div>
           </form>

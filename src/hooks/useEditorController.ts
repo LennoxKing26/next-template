@@ -1,8 +1,10 @@
 // src/hooks/useEditorController.ts
 import { useState } from 'react';
 import { useRequest, useInterval } from 'ahooks';
+import { useTranslations } from 'next-intl';
 
 export function useEditorController() {
+  const t = useTranslations('Editor');
   const [images, setImages] = useState<File[]>([]);
   const [imagePreviews, setImagePreviews] = useState<string[]>([]);
   const [prompt, setPrompt] = useState('');
@@ -75,12 +77,11 @@ export function useEditorController() {
   );
 
   // 监听轮询状态变化
-  // 注意：在实际 Effect 中处理状态更新更安全，这里简化处理
   if (isPolling && pollData?.status === 'completed' && pollData.resultUrl) {
     setResultUrl(pollData.resultUrl);
     setEditId(null);
   } else if (isPolling && pollData?.status === 'failed') {
-    setError(pollData.error || 'Edit failed');
+    setError(pollData.error || t('errorFailed'));
     setEditId(null);
   }
 
@@ -88,7 +89,7 @@ export function useEditorController() {
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = Array.from(e.target.files || []);
     if (files.length > 3) {
-      setError('最多只能上传 3 张图片');
+      setError(t('errorMaxImages'));
       return;
     }
     setImages(files);
@@ -112,8 +113,8 @@ export function useEditorController() {
     setError('');
     setResultUrl(null);
 
-    if (images.length === 0) return setError('请至少上传一张图片');
-    if (!prompt.trim()) return setError('请输入编辑指令');
+    if (images.length === 0) return setError(t('errorNoImage'));
+    if (!prompt.trim()) return setError(t('errorNoPrompt'));
 
     try {
       const uploadResult = await uploadImages(images);
@@ -121,16 +122,24 @@ export function useEditorController() {
       setEditId(editResult.id);
       pollResult(editResult.id);
     } catch (err: any) {
-      setError(err.message || '处理失败，请重试');
+      setError(err.message || t('errorFailed'));
       setEditId(null);
     }
   };
 
   const isProcessing = uploading || submitting || !!editId;
 
+  // Return status key for i18n
+  const getStatusKey = () => {
+    if (uploading) return 'uploading';
+    if (submitting) return 'submitting';
+    if (editId) return 'processing';
+    return 'startEdit';
+  };
+
   return {
     state: { images, imagePreviews, prompt, error, resultUrl, isProcessing },
     actions: { setPrompt, handleImageChange, handleSubmit, handleReset },
-    statusText: uploading ? '上传中...' : submitting ? '提交中...' : editId ? 'AI 处理中...' : '开始编辑',
+    statusKey: getStatusKey(),
   };
 }

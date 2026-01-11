@@ -1,6 +1,7 @@
 'use client';
 
 import { Card, CardBody, Image, Button } from '@heroui/react';
+import { useTranslations } from 'next-intl';
 
 interface ResultDisplayProps {
   resultUrl: string;
@@ -8,12 +9,14 @@ interface ResultDisplayProps {
 }
 
 export function ResultDisplay({ resultUrl, onReset }: ResultDisplayProps) {
+  const t = useTranslations('Editor');
+
   return (
     <Card className="mt-8 bg-content1 border border-default-200 overflow-visible" shadow="lg">
       <CardBody className="p-6 gap-6">
         <div className="flex items-center gap-2 mb-2">
           <iconify-icon icon="mdi:check-decagram" class="text-success text-2xl" />
-          <h3 className="text-2xl font-bold">编辑完成</h3>
+          <h3 className="text-2xl font-bold">{t('editComplete')}</h3>
         </div>
 
         <div className="relative rounded-xl overflow-hidden border border-default-200 shadow-sm bg-black/5">
@@ -30,7 +33,7 @@ export function ResultDisplay({ resultUrl, onReset }: ResultDisplayProps) {
             className="flex-1 font-semibold shadow-lg shadow-primary/20"
             startContent={<iconify-icon icon="mdi:download" width="24" />}
           >
-            下载图片
+            {t('downloadImage')}
           </Button>
           <Button
             variant="flat"
@@ -39,7 +42,7 @@ export function ResultDisplay({ resultUrl, onReset }: ResultDisplayProps) {
             onPress={onReset}
             startContent={<iconify-icon icon="mdi:refresh" width="24" />}
           >
-            重新编辑
+            {t('editAgain')}
           </Button>
         </div>
       </CardBody>

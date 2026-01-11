@@ -2,6 +2,7 @@
 
 import { useRef } from 'react';
 import { Card, Button, Image } from '@heroui/react';
+import { useTranslations } from 'next-intl';
 
 interface ImageUploaderProps {
   previews: string[];
@@ -11,6 +12,7 @@ interface ImageUploaderProps {
 
 export function ImageUploader({ previews, onChange, disabled }: ImageUploaderProps) {
   const inputRef = useRef<HTMLInputElement>(null);
+  const t = useTranslations('Editor');
 
   return (
     <Card className="p-6 border-2 border-dashed border-default-200 bg-content1/50">
@@ -33,8 +35,8 @@ export function ImageUploader({ previews, onChange, disabled }: ImageUploaderPro
             <div className="p-4 rounded-full bg-primary/10 text-primary mb-3">
               <iconify-icon icon="mdi:cloud-upload" width="40" />
             </div>
-            <h3 className="text-lg font-semibold">点击上传图片</h3>
-            <p className="text-small text-default-500">支持 JPG, PNG (最多 3 张)</p>
+            <h3 className="text-lg font-semibold">{t('clickToUpload')}</h3>
+            <p className="text-small text-default-500">{t('uploadHint')}</p>
           </div>
         ) : (
           <div className="w-full">
@@ -61,7 +63,7 @@ export function ImageUploader({ previews, onChange, disabled }: ImageUploaderPro
               className="w-full"
               startContent={<iconify-icon icon="mdi:refresh" />}
             >
-              重新选择
+              {t('reselect')}
             </Button>
           </div>
         )}
