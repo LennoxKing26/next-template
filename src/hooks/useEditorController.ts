@@ -51,7 +51,7 @@ export function useEditorController() {
     { manual: true }
   );
 
-  // 3. 轮询结果
+  // 3. 轮询结果 (核心修改在这里 👇)
   const { data: pollData, run: pollResult } = useRequest(
     async (id: string) => {
       const response = await fetch(`/api/edit-image?id=${id}`);
@@ -61,29 +61,42 @@ export function useEditorController() {
       }
       return response.json();
     },
-    { manual: true }
+    {
+      manual: true,
+      // ✨ 修复关键：在请求成功的回调里处理逻辑，而不是在渲染体里
+      onSuccess: (data) => {
+        if (data.status === 'completed' && data.resultUrl) {
+          // 成功：拿到 URL，清空 ID 停止轮询
+          setResultUrl(data.resultUrl);
+          setEditId(null);
+        } else if (data.status === 'failed') {
+          // 失败：显示错误，清空 ID 停止轮询
+          setError(data.error || t('errorFailed'));
+          setEditId(null);
+        }
+        // 如果是 processing，什么都不用做，useInterval 会继续下一次调用
+      },
+      onError: (err) => {
+        // 网络等错误：停止轮询并报错
+        setError(err.message || t('errorFailed'));
+        setEditId(null);
+      },
+    }
   );
 
-  // 自动轮询逻辑
-  const isPolling = editId && pollData?.status !== 'completed' && pollData?.status !== 'failed';
+  // 4. 自动轮询触发器
+  // 只要 editId 存在，就说明还在处理中，需要继续轮询
+  // 这里不需要判断 pollData.status，因为上面的 onSuccess 负责在完成时把 editId 设为 null
+  const isPolling = !!editId;
 
   useInterval(
     () => {
-      if (isPolling) {
+      if (editId) {
         pollResult(editId);
       }
     },
     isPolling ? 2000 : undefined
   );
-
-  // 监听轮询状态变化
-  if (isPolling && pollData?.status === 'completed' && pollData.resultUrl) {
-    setResultUrl(pollData.resultUrl);
-    setEditId(null);
-  } else if (isPolling && pollData?.status === 'failed') {
-    setError(pollData.error || t('errorFailed'));
-    setEditId(null);
-  }
 
   // UI 交互处理函数
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -119,7 +132,10 @@ export function useEditorController() {
     try {
       const uploadResult = await uploadImages(images);
       const editResult = await submitEdit(uploadResult.urls, prompt);
+
+      // 启动轮询
       setEditId(editResult.id);
+      // 立即查一次，不用等 2 秒
       pollResult(editResult.id);
     } catch (err: any) {
       setError(err.message || t('errorFailed'));
