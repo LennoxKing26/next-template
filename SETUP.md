@@ -46,7 +46,7 @@ pnpm install
 
 ### 2. 配置环境变量
 
-复制 `.env.example` 为 `.env.local`:
+`.env`:
 
 \`\`\`bash
 cp .env.example .env.local

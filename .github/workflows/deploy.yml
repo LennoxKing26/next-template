@@ -1,4 +1,4 @@
-name: Build and Deploy
+name: Build and Push Only
 
 on:
   push:
@@ -25,37 +25,7 @@ jobs:
         with:
           context: .
           push: true
+          # 记得把 qingyex 换成你的用户名
           tags: ${{ secrets.DOCKER_USERNAME }}/ai-image-editor:latest
           cache-from: type=gha
           cache-to: type=gha,mode=max
-
-  deploy-to-vps:
-    needs: build-and-push
-    runs-on: ubuntu-latest
-    steps:
-      - name: Deploy via SSH
-        uses: appleboy/ssh-action@master
-        with:
-          host: ${{ secrets.VPS_HOST }}
-          username: ${{ secrets.VPS_USER }}
-          key: ${{ secrets.VPS_SSH_KEY }}
-          script: |
-            docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}
-            docker pull ${{ secrets.DOCKER_USERNAME }}/ai-image-editor:latest
-
-            # 停止并删除旧容器
-            docker stop ai-editor || true
-            docker rm ai-editor || true
-
-            # 🔥 核心修改：使用 3008 端口启动
-            # 如果你服务器上有 .env 文件，其实可以用 --env-file .env 简化这一大串
-            docker run -d \
-              --name ai-editor \
-              --restart unless-stopped \
-              -p 3008:3008 \
-              -e DATABASE_URL="${{ secrets.DATABASE_URL }}" \
-              -e NEXTAUTH_SECRET="${{ secrets.NEXTAUTH_SECRET }}" \
-              -e NEXTAUTH_URL="http://${{ secrets.VPS_HOST }}:3008" \
-              ${{ secrets.DOCKER_USERNAME }}/ai-image-editor:latest
-              
-            docker image prune -f
