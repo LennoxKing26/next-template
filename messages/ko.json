@@ -1,10 +1,8 @@
 {
   "Common": {
-    "switch_zh": "중국어",
-    "switch_en": "영어",
-    "switch_ko": "한국어",
     "home": "홈",
     "about": "소개",
+    "switch_theme": "테마 변경",
     "theme_light": "라이트",
     "theme_dark": "다크",
     "theme_system": "시스템",
@@ -13,7 +11,11 @@
     "history": "기록",
     "login": "로그인",
     "logout": "로그아웃",
-    "signup": "무료 가입"
+    "signup": "무료 가입",
+    "switch_zh": "중국어",
+    "switch_en": "영어",
+    "switch_ko": "한국어",
+    "switch_language": "언어 변경"
   },
   "Home": {
     "title": "AI 기반",

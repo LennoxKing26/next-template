@@ -1,10 +1,8 @@
 {
   "Common": {
-    "switch_zh": "Chinese",
-    "switch_en": "English",
-    "switch_ko": "Korean",
     "home": "Home",
     "about": "About",
+    "switch_theme": "Switch Theme",
     "theme_light": "Light",
     "theme_dark": "Dark",
     "theme_system": "System",
@@ -13,7 +11,11 @@
     "history": "History",
     "login": "Login",
     "logout": "Logout",
-    "signup": "Sign Up Free"
+    "signup": "Sign Up Free",
+    "switch_zh": "Chinese",
+    "switch_en": "English",
+    "switch_ko": "Korean",
+    "switch_language": "Switch Language"
   },
   "Home": {
     "title": "AI-Powered",

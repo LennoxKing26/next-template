@@ -1,215 +1,124 @@
-'use client';
-
+// app/[locale]/page.tsx
+import { getTranslations, setRequestLocale } from 'next-intl/server';
 import { Link } from '@/i18n/navigation';
-import { useTranslations } from 'next-intl';
-import { ThemeToggle } from '@/components/common/ThemeToggle';
-import { LocaleSwitcher } from '@/components/common/LocaleSwitcher';
-import { useSession, signOut } from 'next-auth/react';
 
-export default function Home() {
-  const t = useTranslations('Home');
-  const tc = useTranslations('Common');
-  const { data: session, status } = useSession();
+// 🔥 核心：从你的中转文件引入 UI 组件
+import { Button, Card, CardBody, CardHeader } from '@/utils/heroui-client';
+
+export default async function Home({ params }: { params: Promise<{ locale: string }> }) {
+  const { locale } = await params;
+
+  // 1. 启用静态生成优化 (Static Generation)
+  setRequestLocale(locale);
+
+  // 2. 服务端获取翻译 (SEO 爬虫直接能读到这些字)
+  const t = await getTranslations('Home');
+  const tc = await getTranslations('Common');
 
   const features = [
-    {
-      icon: 'mdi:image-edit',
-      title: t('feature1Title'),
-      description: t('feature1Desc'),
-    },
-    {
-      icon: 'mdi:text-box-edit',
-      title: t('feature2Title'),
-      description: t('feature2Desc'),
-    },
-    {
-      icon: 'mdi:palette',
-      title: t('feature3Title'),
-      description: t('feature3Desc'),
-    },
-    {
-      icon: 'mdi:lightning-bolt',
-      title: t('feature4Title'),
-      description: t('feature4Desc'),
-    },
-    {
-      icon: 'mdi:account-multiple',
-      title: t('feature5Title'),
-      description: t('feature5Desc'),
-    },
-    {
-      icon: 'mdi:history',
-      title: t('feature6Title'),
-      description: t('feature6Desc'),
-    },
+    { icon: 'mdi:image-edit', key: 'feature1' },
+    { icon: 'mdi:text-box-edit', key: 'feature2' },
+    { icon: 'mdi:palette', key: 'feature3' },
+    { icon: 'mdi:lightning-bolt', key: 'feature4' },
+    { icon: 'mdi:account-multiple', key: 'feature5' },
+    { icon: 'mdi:history', key: 'feature6' },
   ];
 
   const useCases = [
-    {
-      title: t('useCase1Title'),
-      description: t('useCase1Desc'),
-      icon: 'mdi:shopping',
-    },
-    {
-      title: t('useCase2Title'),
-      description: t('useCase2Desc'),
-      icon: 'mdi:share-variant',
-    },
-    {
-      title: t('useCase3Title'),
-      description: t('useCase3Desc'),
-      icon: 'mdi:palette-swatch',
-    },
-    {
-      title: t('useCase4Title'),
-      description: t('useCase4Desc'),
-      icon: 'mdi:bullhorn',
-    },
+    { icon: 'mdi:shopping', key: 'useCase1' },
+    { icon: 'mdi:share-variant', key: 'useCase2' },
+    { icon: 'mdi:palette-swatch', key: 'useCase3' },
+    { icon: 'mdi:bullhorn', key: 'useCase4' },
   ];
 
   return (
-    <div className="min-h-screen bg-background-light dark:bg-background-dark">
-      {/* Header */}
-      <header className="fixed top-0 left-0 right-0 z-50 bg-background-light/80 dark:bg-background-dark/80 backdrop-blur-md border-b border-border-light dark:border-border-dark">
-        <div className="container mx-auto px-3 sm:px-4 py-3 sm:py-3.5 md:py-4 flex items-center justify-between max-w-7xl">
-          <Link href="/" className="flex items-center gap-2 sm:gap-2.5 min-w-0 group">
-            <div className="w-6 h-6 sm:w-7 sm:h-7 md:w-9 md:h-9 shrink-0 flex items-center justify-center group-hover:scale-110 transition-transform">
-              <iconify-icon
-                icon="mdi:image-edit"
-                width="100%"
-                height="100%"
-                class="text-primary-light dark:text-primary-dark"
-                style={{ display: 'flex' }}
-              ></iconify-icon>
-            </div>
-            <h1 className="text-lg sm:text-xl md:text-2xl font-bold text-text-light-primary dark:text-text-dark-primary truncate leading-none">
-              <span className="hidden xs:inline">AI Image Editor</span>
-              <span className="xs:hidden">AI Editor</span>
-            </h1>
-          </Link>
-          <div className="flex items-center gap-2 sm:gap-3 md:gap-4 shrink-0">
-            <LocaleSwitcher />
-            <ThemeToggle />
-            {session ? (
-              <div className="flex items-center gap-2 sm:gap-3">
-                <Link
-                  href="/history"
-                  className="hidden sm:flex items-center gap-1.5 px-3 py-2 md:px-4 md:py-2.5 text-sm md:text-base rounded-lg  text-text-light-primary dark:text-text-dark-primary hover:bg-surface/80  transition-all shadow-sm hover:shadow whitespace-nowrap"
-                >
-                  <span>{tc('history')}</span>
-                </Link>
-                <div className="relative group">
-                  <button className="flex items-center gap-2 px-3 py-2 md:px-4 md:py-2.5 text-sm md:text-base rounded-lg bg-primary-light dark:bg-primary-dark text-white hover:opacity-90 transition-all shadow-sm hover:shadow">
-                    <iconify-icon icon="mdi:account-circle" width="20" height="20"></iconify-icon>
-                    <span className="hidden sm:inline max-w-[120px] truncate">
-                      {session.user?.name || session.user?.email}
-                    </span>
-                  </button>
-                  <div className="absolute right-0 mt-2 w-48 bg-background-light dark:bg-background-dark border border-border-light dark:border-border-dark rounded-lg shadow-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all">
-                    <div className="p-2">
-                      <button
-                        onClick={() => signOut()}
-                        className="w-full text-left px-4 py-2 text-sm text-text-light-primary dark:text-text-dark-primary hover:bg-surface dark:hover:bg-surface-dark rounded-lg transition-colors flex items-center gap-2"
-                      >
-                        <iconify-icon icon="mdi:logout" width="16" height="16"></iconify-icon>
-                        {tc('logout')}
-                      </button>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            ) : (
-              <Link
-                href="/auth/signin"
-                className="flex items-center gap-1.5 px-4 py-2 md:px-5 md:py-2.5 text-sm md:text-base rounded-lg bg-primary-light dark:bg-primary-dark text-white hover:opacity-90 transition-all shadow-sm hover:shadow whitespace-nowrap"
-              >
-                <iconify-icon icon="mdi:login" width="18" height="18"></iconify-icon>
-                <span>{tc('login')}</span>
-              </Link>
-            )}
-          </div>
-        </div>
-      </header>
+    <div className=" bg-background relative overflow-hidden">
+      {/* 装饰背景 (CSS 渲染，不影响 SEO) */}
+      <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[800px] h-[500px] bg-primary/20 blur-[120px] rounded-full pointer-events-none opacity-50 dark:opacity-20" />
+      <div className="absolute bottom-0 right-0 w-[600px] h-[400px] bg-secondary/10 blur-[100px] rounded-full pointer-events-none opacity-50 dark:opacity-20" />
 
       {/* Hero Section */}
-      <section className="pt-28 sm:pt-32 md:pt-36 pb-16 sm:pb-20 md:pb-24 px-4">
-        <div className="container mx-auto text-center max-w-5xl">
-          <h2 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold mb-4 sm:mb-6 md:mb-8 text-text-light-primary dark:text-text-dark-primary leading-tight">
+      <section className="relative pt-12 pb-32 px-6">
+        <div className="container mx-auto max-w-5xl text-center relative z-10">
+          <h1 className="text-4xl sm:text-5xl md:text-7xl font-bold tracking-tight mb-6 bg-clip-text text-transparent bg-linear-to-b from-foreground to-foreground/70 leading-14 md:leading-23">
             {t('title')}
             <br className="hidden sm:block" />
-            <span className="text-primary-light dark:text-primary-dark">{t('titleHighlight')}</span>
-          </h2>
-          <p className="text-base sm:text-lg md:text-xl lg:text-2xl text-text-light-secondary dark:text-text-dark-secondary mb-8 sm:mb-10 md:mb-12 max-w-3xl mx-auto leading-relaxed px-4">
-            {t('subtitle')}
-          </p>
+            <span className="text-primary">{t('titleHighlight')}</span>
+          </h1>
+
+          <p className="text-lg sm:text-xl text-default-500 mb-10 max-w-2xl mx-auto leading-relaxed">{t('subtitle')}</p>
+
+          {/* 按钮组 */}
           <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
-            <Link
-              href="/editor"
-              className="w-full sm:w-auto px-8 py-4 rounded-lg bg-primary-light dark:bg-primary-dark text-white text-lg font-semibold hover:opacity-90 transition-all shadow-lg hover:shadow-xl flex items-center justify-center gap-2"
-            >
-              <iconify-icon icon="mdi:rocket-launch" width="24" height="24"></iconify-icon>
-              {t('startEditing')}
+            {/* ✅ 正确写法：Link 包裹 Button，既不报错，SEO 也能识别出这是个链接 */}
+            <Link href="/editor">
+              <Button
+                size="lg"
+                color="primary"
+                variant="shadow"
+                className="w-full sm:w-auto font-semibold px-8"
+                startContent={<iconify-icon icon="mdi:rocket-launch" width="24"></iconify-icon>}
+              >
+                {t('startEditing')}
+              </Button>
             </Link>
-            <Link
-              href="/examples"
-              className="w-full sm:w-auto px-8 py-4 rounded-lg border-2 border-primary-light dark:border-primary-dark text-primary-light dark:text-primary-dark text-lg font-semibold hover:bg-primary-light/10 dark:hover:bg-primary-dark/10 transition-all"
-            >
-              {t('viewExamples')}
+
+            <Link href="/examples">
+              <Button size="lg" variant="bordered" className="w-full sm:w-auto font-semibold px-8 border-default-300">
+                {t('viewExamples')}
+              </Button>
             </Link>
           </div>
         </div>
       </section>
 
       {/* Features Section */}
-      <section className="py-20 px-4 bg-surface dark:bg-surface-dark">
-        <div className="container mx-auto">
-          <h3 className="text-4xl font-bold text-center mb-12 text-text-light-primary dark:text-text-dark-primary">
-            {t('featuresTitle')}
-          </h3>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {features.map((feature, index) => (
-              <div
+      <section className="py-24 px-6 bg-content1/50">
+        <div className="container mx-auto max-w-7xl">
+          <div className="text-center mb-16">
+            <h2 className="text-3xl font-bold mb-4">{t('featuresTitle')}</h2>
+            <div className="w-20 h-1 bg-primary mx-auto rounded-full" />
+          </div>
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+            {features.map((item, index) => (
+              // Card 是客户端组件，但里面的文字是服务端传进去的，爬虫完全看得到
+              <Card
                 key={index}
-                className="p-6 rounded-xl bg-background-light dark:bg-background-dark border border-border-light dark:border-border-dark hover:border-primary-light dark:hover:border-primary-dark transition-colors"
+                className="border-none bg-background/60 dark:bg-default-50/20 backdrop-blur-lg hover:scale-[1.02] transition-transform"
+                shadow="sm"
+                isPressable
               >
-                <iconify-icon
-                  icon={feature.icon}
-                  width="48"
-                  height="48"
-                  class="text-primary-light dark:text-primary-dark mb-4"
-                ></iconify-icon>
-                <h4 className="text-xl font-semibold mb-2 text-text-light-primary dark:text-text-dark-primary">
-                  {feature.title}
-                </h4>
-                <p className="text-text-light-secondary dark:text-text-dark-secondary">{feature.description}</p>
-              </div>
+                <CardHeader className="flex gap-4 pb-0 pt-6 px-6">
+                  <div className="p-3 rounded-xl bg-primary/10 text-primary">
+                    <iconify-icon icon={item.icon} width="32" height="32"></iconify-icon>
+                  </div>
+                </CardHeader>
+                <CardBody className="px-6 pb-6 pt-4">
+                  <h4 className="text-lg font-bold mb-2">{t(`${item.key}Title`)}</h4>
+                  <p className="text-default-500 text-sm leading-relaxed">{t(`${item.key}Desc`)}</p>
+                </CardBody>
+              </Card>
             ))}
           </div>
         </div>
       </section>
 
       {/* Use Cases Section */}
-      <section className="py-20 px-4">
-        <div className="container mx-auto">
-          <h3 className="text-4xl font-bold text-center mb-12 text-text-light-primary dark:text-text-dark-primary">
-            {t('useCasesTitle')}
-          </h3>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-            {useCases.map((useCase, index) => (
+      <section className="py-24 px-6">
+        <div className="container mx-auto max-w-7xl">
+          <h2 className="text-3xl font-bold text-center mb-16">{t('useCasesTitle')}</h2>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+            {useCases.map((item, index) => (
               <div
                 key={index}
-                className="p-6 rounded-xl bg-surface dark:bg-surface-dark text-center hover:scale-105 transition-transform"
+                className="group p-6 rounded-2xl border border-default-200 hover:border-primary/50 hover:shadow-lg hover:-translate-y-1 transition-all duration-300 bg-background"
               >
-                <iconify-icon
-                  icon={useCase.icon}
-                  width="64"
-                  height="64"
-                  class="text-primary-light dark:text-primary-dark mx-auto mb-4"
-                ></iconify-icon>
-                <h4 className="text-lg font-semibold mb-2 text-text-light-primary dark:text-text-dark-primary">
-                  {useCase.title}
-                </h4>
-                <p className="text-sm text-text-light-secondary dark:text-text-dark-secondary">{useCase.description}</p>
+                <div className="mb-6 text-default-400 group-hover:text-primary transition-colors">
+                  <iconify-icon icon={item.icon} width="48" height="48"></iconify-icon>
+                </div>
+                <h4 className="text-lg font-bold mb-2">{t(`${item.key}Title`)}</h4>
+                <p className="text-sm text-default-500">{t(`${item.key}Desc`)}</p>
               </div>
             ))}
           </div>
@@ -217,23 +126,40 @@ export default function Home() {
       </section>
 
       {/* CTA Section */}
-      <section className="py-20 px-4 bg-primary-light dark:bg-primary-dark">
-        <div className="container mx-auto text-center">
-          <h3 className="text-4xl font-bold mb-6 text-white">{t('ctaTitle')}</h3>
-          <p className="text-xl text-white/90 mb-8 max-w-2xl mx-auto">{t('ctaSubtitle')}</p>
-          <Link
-            href="/auth/signup"
-            className="inline-block px-8 py-4 rounded-lg bg-white text-primary-light dark:text-primary-dark text-lg font-semibold hover:bg-gray-100 transition-colors"
-          >
-            {tc('signup')}
-          </Link>
+      <section className="py-24 px-6">
+        <div className="container mx-auto max-w-4xl text-center">
+          <Card className="bg-linear-to-br from-primary to-secondary text-primary-foreground border-none overflow-visible shadow-2xl">
+            <CardBody className="py-16 px-8 sm:px-16 relative overflow-hidden">
+              <div className="absolute top-0 right-0 -mt-10 -mr-10 opacity-10 rotate-12 pointer-events-none">
+                <iconify-icon icon="mdi:creation" width="200" height="200"></iconify-icon>
+              </div>
+
+              <h3 className="text-3xl sm:text-4xl font-bold mb-6 text-white relative z-10">{t('ctaTitle')}</h3>
+              <p className="text-lg text-white/90 mb-10 max-w-2xl mx-auto relative z-10">{t('ctaSubtitle')}</p>
+
+              <div className="relative z-10 flex justify-center">
+                <Link href="/auth/signup">
+                  <Button size="lg" className="bg-white text-primary font-bold shadow-lg w-full sm:w-auto">
+                    {tc('signup')}
+                  </Button>
+                </Link>
+              </div>
+            </CardBody>
+          </Card>
         </div>
       </section>
 
-      {/* Footer */}
-      <footer className="py-8 px-4 border-t border-border-light dark:border-border-dark">
-        <div className="container mx-auto text-center text-text-light-secondary dark:text-text-dark-secondary">
+      <footer className="py-12 px-6 border-t border-default-100">
+        <div className="container mx-auto text-center text-default-400 text-sm">
           <p>{t('footer')}</p>
+          <div className="mt-6 flex justify-center gap-6 opacity-60">
+            <a href="#" aria-label="Github" className="hover:text-primary transition-colors">
+              <iconify-icon icon="mdi:github" width="24"></iconify-icon>
+            </a>
+            <a href="#" aria-label="Twitter" className="hover:text-primary transition-colors">
+              <iconify-icon icon="mdi:twitter" width="24"></iconify-icon>
+            </a>
+          </div>
         </div>
       </footer>
     </div>

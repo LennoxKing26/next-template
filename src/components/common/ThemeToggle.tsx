@@ -1,82 +1,92 @@
 // src/components/common/ThemeToggle.tsx
 'use client';
 
-import { useState, useRef, useEffect } from 'react';
-import { useTheme } from '@/hooks/useTheme';
+import { useTheme } from 'next-themes';
 import { useTranslations } from 'next-intl';
+import { Dropdown, DropdownTrigger, DropdownMenu, DropdownItem, Button } from '@heroui/react';
+import { useIsMounted } from '@/hooks/useIsMounted';
+import type { Key } from 'react';
 
 export function ThemeToggle() {
-  const { themeMode, setThemeMode } = useTheme();
+  const { theme, setTheme, resolvedTheme } = useTheme();
+  const mounted = useIsMounted();
   const t = useTranslations('Common');
-  const [isOpen, setIsOpen] = useState(false);
-  const dropdownRef = useRef<HTMLDivElement>(null);
 
-  const getThemeIcon = () => {
-    if (themeMode === 'system') return '🖥️';
-    if (themeMode === 'dark') return '🌙';
-    return '☀️';
+  const handleAction = (key: Key) => {
+    setTheme(key as string);
   };
 
-  useEffect(() => {
-    const handleClickOutside = (event: MouseEvent) => {
-      if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
-        setIsOpen(false);
-      }
-    };
+  // 渲染触发按钮的图标
+  // 逻辑：如果没挂载，显示占位；否则显示当前设置对应的图标
+  const getTriggerIcon = () => {
+    if (!mounted) return null;
 
-    document.addEventListener('mousedown', handleClickOutside);
-    return () => document.removeEventListener('mousedown', handleClickOutside);
-  }, []);
-
-  const handleThemeChange = (theme: 'light' | 'dark' | 'system') => {
-    setThemeMode(theme);
-    setIsOpen(false);
+    // 这里使用 switch case 更清晰，图标选用 Material Design 风格，与之前的翻译图标统一
+    switch (theme) {
+      case 'system':
+        return <iconify-icon icon="mdi:monitor" width="22" height="22" class="text-default-500"></iconify-icon>;
+      case 'dark':
+        return <iconify-icon icon="mdi:weather-night" width="22" height="22" class="text-default-500"></iconify-icon>;
+      case 'light':
+        return <iconify-icon icon="mdi:weather-sunny" width="22" height="22" class="text-default-500"></iconify-icon>;
+      default:
+        // 兜底：根据解析出的主题显示
+        return resolvedTheme === 'dark' ? (
+          <iconify-icon icon="mdi:weather-night" width="22" height="22" class="text-default-500"></iconify-icon>
+        ) : (
+          <iconify-icon icon="mdi:weather-sunny" width="22" height="22" class="text-default-500"></iconify-icon>
+        );
+    }
   };
 
   return (
-    <div className="relative" ref={dropdownRef}>
-      <button
-        onClick={() => setIsOpen(!isOpen)}
-        className="flex items-center justify-center w-8 h-8 sm:w-9 sm:h-9 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors text-lg"
-        aria-label="Toggle theme"
-      >
-        {getThemeIcon()}
-      </button>
+    <Dropdown placement="bottom-end">
+      <DropdownTrigger>
+        <Button
+          variant="ghost"
+          isIconOnly
+          aria-label={t('switch_theme') || 'Toggle theme'} // 建议在 json 里加上 switch_theme
+          className="w-8 h-8 sm:w-9 sm:h-9 text-lg"
+        >
+          {/* 如果还没挂载，显示一个透明的占位符防止布局跳动 */}
+          {!mounted ? (
+            <iconify-icon icon="mdi:weather-sunny" width="22" height="22" class="opacity-0"></iconify-icon>
+          ) : (
+            getTriggerIcon()
+          )}
+        </Button>
+      </DropdownTrigger>
 
-      {isOpen && (
-        <div className="absolute right-0 mt-2 w-40 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg shadow-lg py-1 z-50">
-          <button
-            onClick={() => handleThemeChange('light')}
-            className={`w-full px-4 py-2 text-left text-sm hover:bg-gray-100 dark:hover:bg-gray-700 flex items-center gap-2 ${
-              themeMode === 'light'
-                ? 'text-primary-light dark:text-primary-dark font-semibold'
-                : 'text-gray-700 dark:text-gray-300'
-            }`}
-          >
-            ☀️ {t('theme_light')}
-          </button>
-          <button
-            onClick={() => handleThemeChange('dark')}
-            className={`w-full px-4 py-2 text-left text-sm hover:bg-gray-100 dark:hover:bg-gray-700 flex items-center gap-2 ${
-              themeMode === 'dark'
-                ? 'text-primary-light dark:text-primary-dark font-semibold'
-                : 'text-gray-700 dark:text-gray-300'
-            }`}
-          >
-            🌙 {t('theme_dark')}
-          </button>
-          <button
-            onClick={() => handleThemeChange('system')}
-            className={`w-full px-4 py-2 text-left text-sm hover:bg-gray-100 dark:hover:bg-gray-700 flex items-center gap-2 ${
-              themeMode === 'system'
-                ? 'text-primary-light dark:text-primary-dark font-semibold'
-                : 'text-gray-700 dark:text-gray-300'
-            }`}
-          >
-            🖥️ {t('theme_system')}
-          </button>
-        </div>
-      )}
-    </div>
+      <DropdownMenu
+        aria-label="Theme selection"
+        variant="flat"
+        disallowEmptySelection
+        selectionMode="single"
+        selectedKeys={new Set([theme || 'system'])} // 确保有默认值
+        onAction={handleAction}
+        className="min-w-[140px]"
+      >
+        <DropdownItem
+          key="light"
+          startContent={<iconify-icon icon="mdi:weather-sunny" width="20" height="20"></iconify-icon>}
+        >
+          {t('theme_light')}
+        </DropdownItem>
+
+        <DropdownItem
+          key="dark"
+          startContent={<iconify-icon icon="mdi:weather-night" width="20" height="20"></iconify-icon>}
+        >
+          {t('theme_dark')}
+        </DropdownItem>
+
+        <DropdownItem
+          key="system"
+          startContent={<iconify-icon icon="mdi:monitor" width="20" height="20"></iconify-icon>}
+        >
+          {t('theme_system')}
+        </DropdownItem>
+      </DropdownMenu>
+    </Dropdown>
   );
 }

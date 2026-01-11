@@ -1,6 +1,10 @@
 /* app/globals.css */
-@config "../tailwind.config.js";
-@layer theme, base, components, utilities;
+@config "../tailwind.config.mjs";
 @import 'tailwindcss';
-@import '@heroui/styles';
-@import '../src/themes/primary-theme.css' layer(theme);
+
+/* ❌ 删掉这行！我们不再需要强制 hack 了 */
+/* @custom-variant dark (&:where([data-theme="dark"], [data-theme="dark"] *)); */
+
+@layer theme {
+  @import '../src/themes/primary-theme.css';
+}

@@ -1,10 +1,8 @@
 {
   "Common": {
-    "switch_zh": "中文",
-    "switch_en": "英文",
-    "switch_ko": "韩文",
     "home": "首页",
     "about": "关于",
+    "switch_theme": "切换主题",
     "theme_light": "浅色",
     "theme_dark": "深色",
     "theme_system": "跟随系统",
@@ -13,7 +11,11 @@
     "history": "历史记录",
     "login": "登录",
     "logout": "退出登录",
-    "signup": "免费注册"
+    "signup": "免费注册",
+    "switch_zh": "中文",
+    "switch_en": "英文",
+    "switch_ko": "韩文",
+    "switch_language": "切换语言"
   },
   "Home": {
     "title": "AI 驱动的",

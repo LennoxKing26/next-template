@@ -8,27 +8,33 @@ import { useMount } from 'ahooks';
 export function useTheme() {
   const { themeMode, resolvedTheme, setThemeMode, setResolvedTheme, cycleTheme } = useThemeStore();
 
-  // 获取系统主题偏好
   const getSystemTheme = (): ResolvedTheme => {
     if (typeof window === 'undefined') return 'light';
     return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
   };
 
-  // 解析实际应该应用的主题
   const resolveTheme = (mode: ThemeMode): ResolvedTheme => {
-    if (mode === 'system') {
-      return getSystemTheme();
-    }
+    if (mode === 'system') return getSystemTheme();
     return mode;
   };
 
-  // 应用主题到 DOM
+  // 🔥🔥🔥 核心修复在这里 🔥🔥🔥
   const applyTheme = (theme: ResolvedTheme) => {
-    document.documentElement.setAttribute('data-theme', theme);
+    const root = document.documentElement;
+
+    // 1. 设置 data 属性 (保留它，为了兼容你可能写的 [data-theme="dark"] 选择器)
+    root.setAttribute('data-theme', theme);
+
+    // 2. 关键：同时操作 classList，这是 HeroUI 识别暗黑模式的唯一途径
+    root.classList.remove('light', 'dark');
+    root.classList.add(theme); // 添加 'dark' 或 'light'
+
+    // 3. (可选) 设置 style 属性，防止某些原生控件颜色不对
+    root.style.colorScheme = theme;
+
     setResolvedTheme(theme);
   };
 
-  // 初始化：从 cookie 读取主题模式
   useMount(() => {
     const cookieTheme = document.cookie
       .split('; ')
@@ -40,39 +46,27 @@ export function useTheme() {
       const resolved = resolveTheme(cookieTheme);
       applyTheme(resolved);
     } else {
-      // 如果没有 cookie，使用 store 中的默认值
       const resolved = resolveTheme(themeMode);
       applyTheme(resolved);
     }
   });
 
-  // 监听 themeMode 变化
   useEffect(() => {
     const resolved = resolveTheme(themeMode);
     applyTheme(resolved);
-
-    // 更新 cookie
     document.cookie = `theme=${themeMode}; path=/; max-age=${60 * 60 * 24 * 365}`;
   }, [themeMode]);
 
-  // 监听系统主题变化（仅当 themeMode 为 system 时）
   useEffect(() => {
     if (themeMode !== 'system') return;
-
     const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
     const handleChange = (e: MediaQueryListEvent) => {
       const newTheme = e.matches ? 'dark' : 'light';
       applyTheme(newTheme);
     };
-
     mediaQuery.addEventListener('change', handleChange);
     return () => mediaQuery.removeEventListener('change', handleChange);
   }, [themeMode]);
 
-  return {
-    themeMode,
-    resolvedTheme,
-    setThemeMode,
-    cycleTheme,
-  };
+  return { themeMode, resolvedTheme, setThemeMode, cycleTheme };
 }
