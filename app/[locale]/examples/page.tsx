@@ -80,16 +80,16 @@ export default function ExamplesPage() {
             {count}
           </div>
           <div className="flex gap-2 flex-wrap">
-            <Button variant="primary" onClick={increment}>
+            <Button color="primary" onClick={increment}>
               +1
             </Button>
-            <Button variant="primary" onClick={decrement}>
+            <Button color="primary" onClick={decrement}>
               -1
             </Button>
-            <Button variant="secondary" onClick={() => incrementBy(5)}>
+            <Button color="secondary" onClick={() => incrementBy(5)}>
               +5
             </Button>
-            <Button variant="tertiary" onClick={reset}>
+            <Button color="secondary" onClick={reset}>
               重置
             </Button>
           </div>
@@ -119,10 +119,10 @@ export default function ExamplesPage() {
           )}
           {error && <p className="text-error-light dark:text-error-dark">{error}</p>}
           <div className="flex gap-2">
-            <Button variant="primary" onClick={fetchUser} isDisabled={isLoading}>
+            <Button color="primary" onClick={fetchUser} isDisabled={isLoading}>
               {isLoading ? '加载中...' : '获取用户'}
             </Button>
-            <Button variant="tertiary" onClick={clearUser}>
+            <Button color="secondary" onClick={clearUser}>
               清除用户
             </Button>
           </div>
@@ -141,13 +141,13 @@ export default function ExamplesPage() {
             </p>
           </div>
           <div className="flex gap-2">
-            <Button variant="primary" onClick={toggle}>
+            <Button color="primary" onClick={toggle}>
               切换
             </Button>
-            <Button variant="secondary" onClick={setLeft}>
+            <Button color="secondary" onClick={setLeft}>
               设为隐藏
             </Button>
-            <Button variant="secondary" onClick={setRight}>
+            <Button color="secondary" onClick={setRight}>
               设为显示
             </Button>
           </div>
@@ -184,7 +184,7 @@ export default function ExamplesPage() {
           🚦 ahooks useThrottle
         </h2>
         <div className="space-y-4">
-          <Button variant="primary" onClick={() => setClickCount((c) => c + 1)}>
+          <Button color="primary" onClick={() => setClickCount((c) => c + 1)}>
             点击我（节流 1000ms）
           </Button>
           <div className="p-4 bg-gray-100 dark:bg-gray-800 rounded">
@@ -208,11 +208,11 @@ export default function ExamplesPage() {
             {intervalCount}
           </div>
           <div className="flex gap-2">
-            <Button variant="primary" onClick={() => setIntervalRunning(!intervalRunning)}>
+            <Button color="primary" onClick={() => setIntervalRunning(!intervalRunning)}>
               {intervalRunning ? '暂停' : '开始'}
             </Button>
             <Button
-              variant="tertiary"
+              color="secondary"
               onClick={() => {
                 setIntervalCount(0);
                 setIntervalRunning(false);
