@@ -20,6 +20,8 @@ COPY . .
 
 RUN pnpm run build
 
+# ... 前面的不变 ...
+
 # 4. 生产运行阶段 (Runner)
 FROM base AS runner
 WORKDIR /app
@@ -33,6 +35,9 @@ RUN adduser --system --uid 1001 nextjs
 COPY --from=builder /app/public ./public
 COPY --from=builder --chown=nextjs:nodejs /app/.next/standalone ./
 COPY --from=builder --chown=nextjs:nodejs /app/.next/static ./.next/static
+
+# 🔥🔥🔥 新增这一行！把翻译文件复制进去 🔥🔥🔥
+COPY --from=builder /app/messages ./messages
 
 USER nextjs
 
