@@ -4,16 +4,16 @@ import OSS from 'ali-oss';
 import { randomUUID } from 'crypto';
 import path from 'path';
 
-const client = new OSS({
-  accessKeyId: process.env.FILE_ACCESS_KEY_ID!,
-  accessKeySecret: process.env.FILE_ACCESS_KEY_SECRET!,
-  endpoint: process.env.FILE_ENDPOINT!,
-  bucket: process.env.FILE_BUCKET_NAME!,
-  secure: true,
-  timeout: 500000,
-});
-
 export async function POST(request: NextRequest) {
+  const client = new OSS({
+    accessKeyId: process.env.FILE_ACCESS_KEY_ID!,
+    accessKeySecret: process.env.FILE_ACCESS_KEY_SECRET!,
+    endpoint: process.env.FILE_ENDPOINT!,
+    bucket: process.env.FILE_BUCKET_NAME!,
+    secure: true,
+    timeout: 500000,
+  });
+
   try {
     const formData = await request.formData();
     const files = formData.getAll('files') as File[];

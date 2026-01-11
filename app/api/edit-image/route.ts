@@ -4,10 +4,9 @@ import { auth } from '@/lib/auth';
 import dbConnect from '@/lib/mongodb';
 import EditHistory from '@/models/EditHistory';
 
-const WAVESPEED_API_KEY = process.env.WAVESPEED_KEY;
-const WAVESPEED_URL = process.env.WAVESPEED_URL;
-
 async function submitTask(prompt: string, images: string[]) {
+  const WAVESPEED_API_KEY = process.env.WAVESPEED_KEY;
+  const WAVESPEED_URL = process.env.WAVESPEED_URL;
   if (!WAVESPEED_API_KEY || !WAVESPEED_URL) {
     throw new Error('Missing WAVESPEED_KEY or WAVESPEED_URL environment variables');
   }
@@ -46,6 +45,8 @@ async function submitTask(prompt: string, images: string[]) {
 }
 
 async function getResult(requestId: string) {
+  const WAVESPEED_API_KEY = process.env.WAVESPEED_KEY;
+  const WAVESPEED_URL = process.env.WAVESPEED_URL;
   if (!WAVESPEED_API_KEY || !WAVESPEED_URL) {
     throw new Error('Missing WAVESPEED_KEY or WAVESPEED_URL environment variables');
   }
