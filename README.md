@@ -129,6 +129,9 @@ pnpm start
 
 # 代码检查
 pnpm lint
+
+# 生产部署
+cd /www/wwwroot/ai-editor && docker-compose pull && docker-compose up -d && docker image prune -f
 ```
 
 ## 特性
