@@ -1,4 +1,3 @@
-// src/components/home/Header.tsx
 'use client';
 
 import { Link } from '@/i18n/navigation';
@@ -6,99 +5,85 @@ import { useTranslations } from 'next-intl';
 import { ThemeToggle } from '@/components/common/ThemeToggle';
 import { LocaleSwitcher } from '@/components/common/LocaleSwitcher';
 import { useSession, signOut } from 'next-auth/react';
+import { Button } from '@/components/ui/button';
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import {
-  Button,
-  Navbar,
-  NavbarBrand,
-  NavbarContent,
-  NavbarItem,
-  Dropdown,
-  DropdownTrigger,
   DropdownMenu,
-  DropdownItem,
-  Avatar,
-} from '@heroui/react';
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu';
 
 export function Header() {
   const t = useTranslations('Common');
   const { data: session } = useSession();
 
   return (
-    // 使用 HeroUI 的 Navbar 组件，自带吸顶和玻璃拟态效果
-    <Navbar maxWidth="2xl" position="sticky" className="bg-background/70 backdrop-blur-md border-b border-default-100">
-      <NavbarBrand>
+    <header className="sticky top-0 z-50 w-full bg-background/70 backdrop-blur-md border-b border-border">
+      <div className="max-w-7xl mx-auto px-4 h-16 flex items-center justify-between">
         <Link href="/" className="flex items-center gap-2 group">
           <div className="w-8 h-8 flex items-center justify-center bg-primary/10 rounded-lg group-hover:scale-110 transition-transform text-primary">
             <iconify-icon icon="mdi:image-edit" width="20" height="20"></iconify-icon>
           </div>
-          <span className="font-bold text-inherit text-lg">AI Editor</span>
+          <span className="font-bold text-lg">AI Editor</span>
         </Link>
-      </NavbarBrand>
 
-      <NavbarContent justify="end" className="gap-2 sm:gap-4">
-        <NavbarItem>
+        <div className="flex items-center gap-2 sm:gap-4">
           <LocaleSwitcher />
-        </NavbarItem>
-        <NavbarItem>
           <ThemeToggle />
-        </NavbarItem>
 
-        {session ? (
-          <>
-            <NavbarItem className="hidden sm:flex">
-              <Button
-                as={Link}
-                href="/history"
-                variant="ghost"
-                startContent={<iconify-icon icon="mdi:history" width="18"></iconify-icon>}
-              >
-                {t('history')}
+          {session ? (
+            <>
+              <Button variant="ghost" asChild className="hidden sm:flex">
+                <Link href="/history">
+                  <iconify-icon icon="mdi:history" width="18" className="mr-2"></iconify-icon>
+                  {t('history')}
+                </Link>
               </Button>
-            </NavbarItem>
-            <NavbarItem>
-              <Dropdown placement="bottom-end">
-                <DropdownTrigger>
-                  <Avatar
-                    isBordered
-                    as="button"
-                    className="transition-transform"
-                    color="primary"
-                    name={session.user?.name?.[0]}
-                    size="sm"
-                    src={session.user?.image || undefined}
-                  />
-                </DropdownTrigger>
-                <DropdownMenu aria-label="Profile Actions" variant="flat">
-                  <DropdownItem key="profile" className="h-14 gap-2">
-                    <p className="font-semibold">{t('email')}</p>
-                    <p className="font-semibold">{session.user?.email}</p>
-                  </DropdownItem>
-                  <DropdownItem key="history" href="/history" className="sm:hidden">
-                    {t('history')}
-                  </DropdownItem>
-                  <DropdownItem key="logout" color="danger" onPress={() => signOut()}>
+
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <Button variant="ghost" className="relative h-8 w-8 rounded-full">
+                    <Avatar className="h-8 w-8 border-2 border-primary">
+                      <AvatarImage src={session.user?.image || undefined} alt={session.user?.name || ''} />
+                      <AvatarFallback className="bg-primary text-primary-foreground">
+                        {session.user?.name?.[0] || 'U'}
+                      </AvatarFallback>
+                    </Avatar>
+                  </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="end" className="w-56">
+                  <DropdownMenuLabel className="font-normal">
+                    <div className="flex flex-col space-y-1">
+                      <p className="text-sm font-medium">{t('email')}</p>
+                      <p className="text-xs text-muted-foreground truncate">{session.user?.email}</p>
+                    </div>
+                  </DropdownMenuLabel>
+                  <DropdownMenuSeparator />
+                  <DropdownMenuItem asChild className="sm:hidden cursor-pointer">
+                    <Link href="/history">{t('history')}</Link>
+                  </DropdownMenuItem>
+                  <DropdownMenuItem
+                    className="text-destructive focus:text-destructive cursor-pointer"
+                    onClick={() => signOut()}
+                  >
                     {t('logout')}
-                  </DropdownItem>
-                </DropdownMenu>
-              </Dropdown>
-            </NavbarItem>
-          </>
-        ) : (
-          <NavbarItem>
-            <Button
-              as={Link}
-              href="/auth/signin"
-              color="primary"
-              variant="flat"
-              size="sm"
-              startContent={<iconify-icon icon="mdi:login" width="18"></iconify-icon>}
-              className="font-medium"
-            >
-              {t('login')}
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
+            </>
+          ) : (
+            <Button asChild size="sm">
+              <Link href="/auth/signin">
+                <iconify-icon icon="mdi:login" width="18" className="mr-2"></iconify-icon>
+                {t('login')}
+              </Link>
             </Button>
-          </NavbarItem>
-        )}
-      </NavbarContent>
-    </Navbar>
+          )}
+        </div>
+      </div>
+    </header>
   );
 }

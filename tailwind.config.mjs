@@ -1,142 +1,18 @@
 // tailwind.config.mjs
 
-import { heroui } from '@heroui/theme';
-
 /** @type {import('tailwindcss').Config} */
-export default {
+const config = {
   content: [
     './app/**/*.{js,ts,jsx,tsx,mdx}',
     './pages/**/*.{js,ts,jsx,tsx,mdx}',
     './components/**/*.{js,ts,jsx,tsx,mdx}',
     './src/**/*.{js,ts,jsx,tsx,mdx}',
-
-    // 🔥🔥🔥 样式修复核心 🔥🔥🔥
-    // 你的版本比较新，组件分散在不同的包里，必须用这个通配符才能扫到 Dropdown
-    './node_modules/@heroui/*/dist/**/*.{js,ts,jsx,tsx}',
   ],
-  darkMode: 'class', // 配合 next-themes
+  darkMode: 'class',
   theme: {
-    extend: {
-      colors: {
-        // ... 请在这里保留你原来的 colors 配置 ...
-        text: {
-          light: {
-            primary: '#213547',
-            secondary: '#21354799',
-            disabled: '#21354761',
-            onPrimary: '#FFFFFF',
-            link: '#03C188',
-          },
-          dark: {
-            primary: '#FFFFFFD9',
-            secondary: '#FFFFFF99',
-            disabled: '#FFFFFF61',
-            onPrimary: '#FFFFFF',
-            link: '#18D1A0',
-          },
-        },
-        background: { light: '#ffffff', dark: '#1a1a1a' },
-        card: { light: '#C8F1E5', dark: '#1A3830' },
-        primary: {
-          DEFAULT: '#03C188',
-          light: '#03C188',
-          dark: '#18D1A0',
-          50: '#E6FBF5',
-          100: '#C4F5E3',
-          200: '#98EDD1',
-          300: '#6BE4BF',
-          400: '#3CD8A6',
-          500: '#03C188',
-          600: '#02AC78',
-          700: '#02946A',
-          800: '#02795A',
-          900: '#015F4A',
-        },
-        secondary: {
-          DEFAULT: '#E3F0EC',
-          light: '#E3F0EC',
-          dark: '#5FC4A8',
-          50: '#F2F9F6',
-          100: '#E3F0EC',
-          200: '#C4E0D7',
-          300: '#A5D0C2',
-          400: '#84C2B0',
-          500: '#5FC4A8',
-          600: '#4FB297',
-          700: '#429E85',
-          800: '#368B73',
-          900: '#256C58',
-        },
-        surface: {
-          DEFAULT: '#EAF9F3',
-          dark: '#263530',
-          1: '#EFFAF6',
-          2: '#E6F6F1',
-          3: '#DFF2EC',
-          dark1: '#16201D',
-          dark2: '#1D2825',
-          dark3: '#23312E',
-        },
-        border: { light: 'rgba(0,0,0,0.08)', dark: 'rgba(255,255,255,0.12)' },
-        gray: {
-          50: '#F8FAF9',
-          100: '#EFF1F0',
-          200: '#E1E4E3',
-          300: '#C8CDCC',
-          400: '#A3A9A8',
-          500: '#7B8180',
-          600: '#5D6261',
-          700: '#474B4A',
-          800: '#2F3231',
-          900: '#1C1D1D',
-        },
-        success: {
-          DEFAULT: '#1DA674',
-          light: '#1DA674',
-          dark: '#117552',
-          50: '#E7F8F1',
-          100: '#C7F0DF',
-          200: '#A1E6C9',
-          300: '#71D3B0',
-          400: '#44C59B',
-          500: '#1DA674',
-          600: '#158D62',
-          700: '#117552',
-          800: '#0E5C42',
-          900: '#0B4935',
-        },
-        warning: {
-          DEFAULT: '#F59E0B',
-          light: '#F59E0B',
-          dark: '#B45309',
-          50: '#FFFAEB',
-          100: '#FFF3C7',
-          200: '#FDE68A',
-          300: '#FCD34D',
-          400: '#FBBF24',
-          500: '#F59E0B',
-          600: '#D97706',
-          700: '#B45309',
-          800: '#92400E',
-          900: '#78350F',
-        },
-        error: {
-          DEFAULT: '#EF4444',
-          light: '#EF4444',
-          dark: '#B91C1C',
-          50: '#FEF2F2',
-          100: '#FEE2E2',
-          200: '#FECACA',
-          300: '#FCA5A5',
-          400: '#F87171',
-          500: '#EF4444',
-          600: '#DC2626',
-          700: '#B91C1C',
-          800: '#991B1B',
-          900: '#7F1D1D',
-        },
-      },
-    },
+    extend: {},
   },
-  plugins: [heroui()],
+  plugins: [],
 };
+
+export default config;

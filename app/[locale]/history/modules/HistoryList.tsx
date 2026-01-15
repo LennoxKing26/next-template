@@ -3,9 +3,10 @@
 import { useEffect } from 'react';
 import { useSession } from 'next-auth/react';
 import { useRouter, Link } from '@/i18n/navigation';
-import { Button, Skeleton } from '@heroui/react';
 import { useRequest } from 'ahooks';
 import { useTranslations } from 'next-intl';
+import { Button } from '@/components/ui/button';
+import { Skeleton } from '@/components/ui/skeleton';
 import { HistoryCard } from './HistoryCard';
 
 interface EditRecord {
@@ -57,12 +58,12 @@ export default function HistoryList() {
 
   if (error) {
     return (
-      <div className="w-full flex flex-col items-center justify-center py-20 text-danger">
-        <iconify-icon icon="mdi:alert-circle-outline" width="64" />
+      <div className="w-full flex flex-col items-center justify-center py-20 text-destructive">
+        <iconify-icon icon="mdi:alert-circle-outline" width="64"></iconify-icon>
         <p className="mt-4 text-lg font-medium">
           {t('loadFailed')}: {error.message}
         </p>
-        <Button color="primary" variant="flat" className="mt-4" onPress={refresh}>
+        <Button variant="outline" className="mt-4" onClick={refresh}>
           {t('retry')}
         </Button>
       </div>
@@ -71,17 +72,18 @@ export default function HistoryList() {
 
   if (!history || history.length === 0) {
     return (
-      <div className="flex flex-col items-center justify-center py-24 bg-content1/30 rounded-3xl border border-dashed border-default-200">
-        <div className="p-6 bg-default-100 rounded-full mb-6">
-          <iconify-icon icon="mdi:image-filter-vintage" width="64" class="text-default-400" />
+      <div className="flex flex-col items-center justify-center py-24 bg-card/30 rounded-3xl border border-dashed border-border">
+        <div className="p-6 bg-muted rounded-full mb-6">
+          <iconify-icon icon="mdi:image-filter-vintage" width="64" class="text-muted-foreground"></iconify-icon>
         </div>
-        <h3 className="text-xl font-bold text-default-700">{t('noRecords')}</h3>
-        <p className="text-default-500 mt-2 mb-8 max-w-xs text-center">{t('noRecordsDesc')}</p>
-        <Link href="/editor">
-          <Button color="primary" size="lg" startContent={<iconify-icon icon="mdi:plus" width="24" />}>
+        <h3 className="text-xl font-bold text-foreground">{t('noRecords')}</h3>
+        <p className="text-muted-foreground mt-2 mb-8 max-w-xs text-center">{t('noRecordsDesc')}</p>
+        <Button asChild size="lg">
+          <Link href="/editor">
+            <iconify-icon icon="mdi:plus" width="24" class="mr-2"></iconify-icon>
             {t('startFirst')}
-          </Button>
-        </Link>
+          </Link>
+        </Button>
       </div>
     );
   }

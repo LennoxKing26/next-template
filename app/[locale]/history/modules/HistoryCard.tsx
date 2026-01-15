@@ -1,8 +1,11 @@
 'use client';
 
-import { Card, CardFooter, Image, Button, Chip } from '@heroui/react';
 import { useTranslations } from 'next-intl';
 import { useLocale } from 'next-intl';
+import { Card, CardFooter } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
+import { Badge } from '@/components/ui/badge';
+import Image from 'next/image';
 
 interface HistoryCardProps {
   record: {
@@ -19,12 +22,13 @@ export function HistoryCard({ record }: HistoryCardProps) {
   const t = useTranslations('History');
   const locale = useLocale();
 
-  const statusMap: Record<string, { color: 'success' | 'warning' | 'danger' | 'default'; labelKey: string }> = {
-    completed: { color: 'success', labelKey: 'statusCompleted' },
-    processing: { color: 'warning', labelKey: 'statusProcessing' },
-    failed: { color: 'danger', labelKey: 'statusFailed' },
-    pending: { color: 'default', labelKey: 'statusPending' },
-  };
+  const statusMap: Record<string, { variant: 'default' | 'secondary' | 'destructive' | 'outline'; labelKey: string }> =
+    {
+      completed: { variant: 'default', labelKey: 'statusCompleted' },
+      processing: { variant: 'secondary', labelKey: 'statusProcessing' },
+      failed: { variant: 'destructive', labelKey: 'statusFailed' },
+      pending: { variant: 'outline', labelKey: 'statusPending' },
+    };
 
   const statusConfig = statusMap[record.status] || statusMap.pending;
 
@@ -36,55 +40,53 @@ export function HistoryCard({ record }: HistoryCardProps) {
   });
 
   return (
-    <Card isFooterBlurred className="w-full h-[300px]  border-none" shadow="sm">
-      <div className="relative w-full h-full overflow-hidden group">
+    <Card className="w-full h-[300px] overflow-hidden border shadow-sm cursor-pointer group">
+      <div className="relative w-full h-full">
         {record.resultUrl ? (
           <Image
-            removeWrapper
-            alt="AI Generated Result"
-            className="z-0 w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
             src={record.resultUrl}
+            alt="AI Generated Result"
+            fill
+            className="object-cover transition-transform duration-500 group-hover:scale-110"
           />
         ) : (
-          <div className="w-full h-full bg-default-100 flex flex-col items-center justify-center text-default-400 gap-2">
+          <div className="w-full h-full bg-muted flex flex-col items-center justify-center text-muted-foreground gap-2">
             <iconify-icon
               icon={record.status === 'processing' ? 'mdi:magic-staff' : 'mdi:image-broken-variant'}
               width="48"
               class={record.status === 'processing' ? 'animate-pulse' : ''}
-            />
+            ></iconify-icon>
             <span className="text-xs">{t(statusConfig.labelKey)}</span>
           </div>
         )}
 
         <div className="absolute top-2 right-2 z-20">
-          <Chip color={statusConfig.color} size="sm" variant="flat" className="backdrop-blur-md bg-background/60">
+          <Badge variant={statusConfig.variant} className="backdrop-blur-md bg-background/60">
             {t(statusConfig.labelKey)}
-          </Chip>
+          </Badge>
         </div>
-      </div>
 
-      <CardFooter className="absolute bg-black/40 bottom-0 z-10 border-t-1 border-default-600 dark:border-default-100 flex-col items-start gap-2 h-[100px] backdrop-blur-md">
-        <div className="flex justify-between items-start w-full">
-          <div className="flex flex-col gap-1 w-[70%]">
-            <p className="text-tiny text-white/60 uppercase font-bold">{dateStr}</p>
-            <p className="text-small text-white truncate font-medium" title={record.prompt}>
-              {record.prompt}
-            </p>
+        <CardFooter className="absolute bottom-0 left-0 right-0 bg-black/60 backdrop-blur-md border-t border-white/10 flex-col items-start gap-2 h-[100px] p-4">
+          <div className="flex justify-between items-start w-full">
+            <div className="flex flex-col gap-1 w-[70%]">
+              <p className="text-xs text-white/60 uppercase font-bold">{dateStr}</p>
+              <p className="text-sm text-white truncate font-medium" title={record.prompt}>
+                {record.prompt}
+              </p>
+            </div>
+            {record.resultUrl && (
+              <Button
+                size="icon"
+                variant="ghost"
+                className="text-white bg-white/20 hover:bg-white/40 rounded-full h-8 w-8"
+                onClick={() => window.open(record.resultUrl, '_blank')}
+              >
+                <iconify-icon icon="mdi:download" width="18"></iconify-icon>
+              </Button>
+            )}
           </div>
-          {record.resultUrl && (
-            <Button
-              isIconOnly
-              radius="full"
-              size="sm"
-              variant="flat"
-              className="text-white bg-white/20 hover:bg-white/40"
-              onPress={() => window.open(record.resultUrl, '_blank')}
-            >
-              <iconify-icon icon="mdi:download" width="18" />
-            </Button>
-          )}
-        </div>
-      </CardFooter>
+        </CardFooter>
+      </div>
     </Card>
   );
 }

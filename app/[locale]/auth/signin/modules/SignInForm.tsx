@@ -3,8 +3,10 @@
 import { useState } from 'react';
 import { signIn } from 'next-auth/react';
 import { useRouter, Link } from '@/i18n/navigation';
-import { Button, Input, Card, CardBody, CardHeader, Link as HeroLink } from '@heroui/react';
 import { useTranslations } from 'next-intl';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Card, CardContent, CardHeader } from '@/components/ui/card';
 
 export default function SignInForm() {
   const router = useRouter();
@@ -15,7 +17,6 @@ export default function SignInForm() {
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
   const [isVisible, setIsVisible] = useState(false);
-  const toggleVisibility = () => setIsVisible(!isVisible);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -34,7 +35,7 @@ export default function SignInForm() {
       } else {
         router.push('/editor');
       }
-    } catch (err) {
+    } catch {
       setError(t('errorLoginFailed'));
     } finally {
       setLoading(false);
@@ -42,7 +43,7 @@ export default function SignInForm() {
   };
 
   return (
-    <Card className="w-full max-w-md backdrop-blur-md bg-background/60 dark:bg-content1/50 shadow-large">
+    <Card className="w-full max-w-md backdrop-blur-md bg-background/60 dark:bg-card/50 shadow-xl border">
       <CardHeader className="flex flex-col gap-3 items-center pt-8 pb-4">
         <Link href="/" className="group flex flex-col items-center gap-2">
           <div className="p-3 rounded-xl bg-primary/10 text-primary group-hover:scale-110 transition-transform duration-300">
@@ -52,90 +53,95 @@ export default function SignInForm() {
         </Link>
         <div className="text-center space-y-1">
           <h2 className="text-xl font-semibold">{t('welcomeBack')}</h2>
-          <p className="text-sm text-default-500">{t('enterCredentials')}</p>
+          <p className="text-sm text-muted-foreground">{t('enterCredentials')}</p>
         </div>
       </CardHeader>
 
-      <CardBody className="px-8 pb-8">
+      <CardContent className="px-8 pb-8">
         <form onSubmit={handleSubmit} className="flex flex-col gap-6">
           {error && (
-            <div className="p-3 rounded-medium bg-danger-50 text-danger text-sm flex items-center gap-2 animate-appearance-in">
+            <div className="p-3 rounded-lg bg-destructive/10 text-destructive text-sm flex items-center gap-2 animate-in fade-in">
               <iconify-icon icon="mdi:alert-circle" width="18"></iconify-icon>
               {error}
             </div>
           )}
 
           <div className="flex flex-col gap-4">
-            <Input
-              type="email"
-              label={t('email')}
-              placeholder="your@email.com"
-              variant="bordered"
-              labelPlacement="outside"
-              value={email}
-              onValueChange={setEmail}
-              isRequired
-              classNames={{
-                inputWrapper: 'bg-default-100/50 hover:bg-default-100 focus-within:!bg-default-100/50',
-              }}
-              startContent={<iconify-icon icon="mdi:email" class="text-default-400 text-xl pointer-events-none" />}
-            />
+            <div className="space-y-2">
+              <label className="text-sm font-medium">{t('email')}</label>
+              <div className="relative">
+                <iconify-icon
+                  icon="mdi:email"
+                  width="18"
+                  class="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground"
+                ></iconify-icon>
+                <Input
+                  type="email"
+                  placeholder="your@email.com"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  required
+                  className="pl-10"
+                />
+              </div>
+            </div>
 
-            <Input
-              label={t('password')}
-              placeholder="••••••••"
-              variant="bordered"
-              labelPlacement="outside"
-              value={password}
-              onValueChange={setPassword}
-              isRequired
-              startContent={<iconify-icon icon="mdi:lock" class="text-default-400 text-xl pointer-events-none" />}
-              endContent={
+            <div className="space-y-2">
+              <label className="text-sm font-medium">{t('password')}</label>
+              <div className="relative">
+                <iconify-icon
+                  icon="mdi:lock"
+                  width="18"
+                  class="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground"
+                ></iconify-icon>
+                <Input
+                  type={isVisible ? 'text' : 'password'}
+                  placeholder="••••••••"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  required
+                  className="pl-10 pr-10"
+                />
                 <button
-                  className="focus:outline-none opacity-70 hover:opacity-100 transition-opacity"
                   type="button"
-                  onClick={toggleVisibility}
+                  onClick={() => setIsVisible(!isVisible)}
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground transition-colors"
                   aria-label="toggle password visibility"
                 >
-                  {isVisible ? (
-                    <iconify-icon icon="mdi:eye-off" class="text-default-400 text-xl" />
-                  ) : (
-                    <iconify-icon icon="mdi:eye" class="text-default-400 text-xl" />
-                  )}
+                  <iconify-icon icon={isVisible ? 'mdi:eye-off' : 'mdi:eye'} width="18"></iconify-icon>
                 </button>
-              }
-              type={isVisible ? 'text' : 'password'}
-              classNames={{
-                inputWrapper: 'bg-default-100/50 hover:bg-default-100 focus-within:!bg-default-100/50',
-              }}
-            />
+              </div>
+            </div>
 
             <div className="flex justify-end">
-              <HeroLink href="#" size="sm" color="primary" className="text-xs">
+              <Link href="#" className="text-xs text-primary hover:underline">
                 {t('forgotPassword')}
-              </HeroLink>
+              </Link>
             </div>
           </div>
 
-          <Button
-            type="submit"
-            color="primary"
-            size="lg"
-            className="w-full font-semibold shadow-lg shadow-primary/20"
-            isLoading={loading}
-            startContent={!loading && <iconify-icon icon="mdi:login" width="20" />}
-          >
-            {loading ? t('loggingIn') : tCommon('login')}
+          <Button type="submit" size="lg" className="w-full font-semibold" disabled={loading}>
+            {loading ? (
+              <>
+                <iconify-icon icon="mdi:loading" width="20" class="animate-spin mr-2"></iconify-icon>
+                {t('loggingIn')}
+              </>
+            ) : (
+              <>
+                <iconify-icon icon="mdi:login" width="20" class="mr-2"></iconify-icon>
+                {tCommon('login')}
+              </>
+            )}
           </Button>
 
-          <div className="flex items-center gap-2 text-sm text-default-500 justify-center mt-2">
+          <div className="flex items-center gap-2 text-sm text-muted-foreground justify-center mt-2">
             <span>{t('noAccount')}</span>
-            <HeroLink as={Link} href="/auth/signup" size="sm" color="primary" className="font-semibold cursor-pointer">
+            <Link href="/auth/signup" className="text-primary font-semibold hover:underline">
               {t('registerNow')}
-            </HeroLink>
+            </Link>
           </div>
         </form>
-      </CardBody>
+      </CardContent>
     </Card>
   );
 }
